@@ -143,6 +143,7 @@ const char* LOG_tNow_local_iso8601();
 #ifdef UTIL_LOG_DEFINE_FUNCTIONS
 #undef UTIL_LOG_DEFINE_FUNCTIONS
 
+#include <inttypes.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -158,7 +159,7 @@ static void ___LOG_tNow_local_iso8601(char* buffer, size_t size)
     const time_t t = time(NULL);
     const struct tm* tm = localtime(&t);
 
-    if (!(tm && (strftime(buffer, size, "%FT%T", tm) > 0))) { sprintf(buffer, "%lli", (int64_t)t); }
+    if (!(tm && (strftime(buffer, size, "%FT%T", tm) > 0))) { sprintf(buffer, "%" PRIi64, (int64_t)t); }
 }
 
 

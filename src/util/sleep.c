@@ -6,6 +6,8 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 
 #include <stdint.h>
 
+#include "sleep.h"
+
 #ifdef _WIN32
 #include <Windows.h>
 #else
@@ -13,7 +15,9 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #endif
 
 
+
 #define LITERAL_1e6 (1000000)
+
 
 
 int UTIL_sleep_ms(uint32_t t_ms)
