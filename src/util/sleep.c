@@ -48,6 +48,7 @@ int UTIL_sleep_us(uint32_t t_us)
     const DWORD t_ms = (DWORD)(t_us / 1000);
 
     Sleep(t_ms);
+    return 0;
 
 #else // _WIN32
 
