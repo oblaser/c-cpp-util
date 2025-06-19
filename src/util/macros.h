@@ -88,9 +88,12 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 // preprocessor macros
 
 #define UTIL_CLAMP(_v, _lo, _hi) ((_v) < (_lo) ? (_lo) : ((_v) > (_hi) ? (_hi) : (_v)))
-#define UTIL_MAX(_a, _b)         ((_a) > (_b) ? (_a) : (_b))
-#define UTIL_MIN(_a, _b)         ((_a) < (_b) ? (_a) : (_b))
-#define UTIL_ROUND(_v)           ((_v) < 0 ? ((_v) - 0.5f) : ((_v) + 0.5f))
+
+#define UTIL_MAX(_a, _b) ((_a) > (_b) ? (_a) : (_b))
+#define UTIL_MIN(_a, _b) ((_a) < (_b) ? (_a) : (_b))
+
+#define UTIL_ROUND(_type, _v)  ((_type)((_v) < 0 ? ((_v) - 0.5) : ((_v) + 0.5)))
+#define UTIL_ROUNDF(_type, _v) ((_type)((_v) < 0 ? ((_v) - 0.5f) : ((_v) + 0.5f)))
 
 
 

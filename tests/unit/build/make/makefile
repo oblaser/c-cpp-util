@@ -20,6 +20,7 @@ CFLAGS_COMMON = $(INCLUDE_DIR_FLAGS) $(DEFINE_FLAGS) -Wall -Werror=format -Werro
 CFLAGS_CC = -Werror=discarded-qualifiers -Werror=implicit -Werror=incompatible-pointer-types -Werror=int-conversion -Werror=pointer-sign
 CFLAGS_CXX = -Werror=reorder -Werror=switch #-Wno-psabi
 
+SRC_FILES_LIB = $(SRC_DIR)/util/log.h $(SRC_DIR)/util/macros.h $(SRC_DIR)/util/sleep.c $(SRC_DIR)/util/sleep.h
 OBJS_LIB = sleep.o
 OBJS = main.o $(OBJS_LIB)
 EXE = test_unit.bin
@@ -35,7 +36,7 @@ all: $(EXE)
 $(EXE): $(OBJS)
 	$(CXX) $(CFLAGS_COMMON) $(CFLAGS_CXX) -o $(EXE) $(OBJS)
 
-main.o: $(OBJS_LIB) ../../main.cpp ../../macros.hpp
+main.o: $(OBJS_LIB) $(SRC_FILES_LIB) ../../main.cpp ../../macros.hpp
 	$(CXX) -c $(CFLAGS_COMMON) $(CFLAGS_CXX) ../../main.cpp
 
 sleep.o: $(SRC_DIR)/util/sleep.c $(SRC_DIR)/util/sleep.h
