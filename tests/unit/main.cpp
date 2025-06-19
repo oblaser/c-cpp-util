@@ -19,10 +19,11 @@ TEST_CASE("C/C++ Util")
 
 
 
-#include "macros.hpp"
-#include "sleep.hpp"
-
-
-
 #define UTIL_LOG_DEFINE_FUNCTIONS
 #include "util/log.h"
+
+
+
+#include "log.hpp"
+#include "macros.hpp"
+#include "sleep.hpp"

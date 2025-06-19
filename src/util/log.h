@@ -154,9 +154,8 @@ const char* LOG_tNow_local_iso8601();
 #endif
 
 
-static void ___LOG_tNow_local_iso8601(char* buffer, size_t size)
+static inline void ___LOG_t_local_iso8601(char* buffer, size_t size, time_t t)
 {
-    const time_t t = time(NULL);
     const struct tm* tm = localtime(&t);
 
     if (!(tm && (strftime(buffer, size, "%FT%T", tm) > 0))) { sprintf(buffer, "%" PRIi64, (int64_t)t); }
@@ -168,7 +167,7 @@ static void ___LOG_tNow_local_iso8601(char* buffer, size_t size)
 std::string LOG_tNow_local_iso8601()
 {
     char buffer[25];
-    ___LOG_tNow_local_iso8601(buffer, sizeof(buffer));
+    ___LOG_t_local_iso8601(buffer, sizeof(buffer), time(NULL));
     return buffer;
 }
 
@@ -178,7 +177,7 @@ const char* LOG_tNow_local_iso8601()
 {
 #warning "LOG_tNow_local_iso8601() is not thread safe"
     static char buffer[25];
-    ___LOG_tNow_local_iso8601(buffer, sizeof(buffer));
+    ___LOG_t_local_iso8601(buffer, sizeof(buffer), time(NULL));
     return buffer;
 }
 
