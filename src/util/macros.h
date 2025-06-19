@@ -15,6 +15,9 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 
 
 
+//======================================================================================================================
+// declaration specifiers/attributes
+
 #if defined(_MSC_VER)
 #if (_MSVC_LANG >= 201703L)
 #define ATTR_UNUSED [[maybe_unused]]
@@ -35,6 +38,9 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 
 
 
+//======================================================================================================================
+// preprocessor macros
+
 #ifndef PP_CAT
 // clang-format off
 #define PP_CAT_NX(_a, _b)           _a ## _b
@@ -42,8 +48,8 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #define PP_CAT4_NX(_a, _b, _c, _d)  _a ## _b ## _c ## _d
 // clang-format on
 #define PP_CAT(_a, _b)          PP_CAT_NX(_a, _b)
-#define PP_CAT3(_a, _b, _c)     PP_CAT(PP_CAT(_a, _b), _c)
-#define PP_CAT4(_a, _b, _c, _d) PP_CAT3(PP_CAT(_a, _b), _c, _d)
+#define PP_CAT3(_a, _b, _c)     PP_CAT3_NX(_a, _b, _c)
+#define PP_CAT4(_a, _b, _c, _d) PP_CAT4_NX(_a, _b, _c, _d)
 #endif // PP_CAT
 
 
@@ -78,10 +84,13 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 
 
 
+//======================================================================================================================
+// preprocessor macros
+
 #define UTIL_CLAMP(_v, _lo, _hi) ((_v) < (_lo) ? (_lo) : ((_v) > (_hi) ? (_hi) : (_v)))
 #define UTIL_MAX(_a, _b)         ((_a) > (_b) ? (_a) : (_b))
 #define UTIL_MIN(_a, _b)         ((_a) < (_b) ? (_a) : (_b))
-#define UTIL_ROUND(_v)           ((_v) < 0 ? ((_v)-0.5f) : ((_v) + 0.5f))
+#define UTIL_ROUND(_v)           ((_v) < 0 ? ((_v) - 0.5f) : ((_v) + 0.5f))
 
 
 
