@@ -36,7 +36,7 @@ all: $(EXE)
 $(EXE): $(OBJS)
 	$(CXX) $(CFLAGS_COMMON) $(CFLAGS_CXX) -o $(EXE) $(OBJS)
 
-main.o: $(OBJS_LIB) $(SRC_FILES_LIB) ../../main.cpp ../../macros.hpp
+main.o: $(OBJS_LIB) $(SRC_FILES_LIB) ../../main.cpp ../../macros.hpp ../../sleep.hpp
 	$(CXX) -c $(CFLAGS_COMMON) $(CFLAGS_CXX) ../../main.cpp
 
 sleep.o: $(SRC_DIR)/util/sleep.c $(SRC_DIR)/util/sleep.h

@@ -10,11 +10,17 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #include "catch2/catch.hpp"
 
 
-TEST_CASE("C/C++ Util") { std::cout << std::endl << "Testing C/C++ Util ..." << std::endl; }
+TEST_CASE("C/C++ Util")
+{
+    std::cout << std::endl;
+    std::cout << "Testing C/C++ Util ..." << std::endl;
+    std::cout << std::endl;
+}
 
 
 
 #include "macros.hpp"
+#include "sleep.hpp"
 
 
 

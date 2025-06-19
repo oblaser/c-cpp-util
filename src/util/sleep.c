@@ -5,18 +5,18 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
 #include <stdint.h>
+#include <time.h>
 
 #include "sleep.h"
 
 #ifdef _WIN32
 #include <Windows.h>
-#else
-#include <time.h>
 #endif
 
 
 
 #define LITERAL_1e6 (1000000)
+#define LITERAL_1e9 (1000000000)
 
 
 
@@ -59,13 +59,10 @@ int UTIL_sleep_us(uint32_t t_us)
 #endif // _WIN32
 }
 
-
-#ifndef _WIN32
-
 void UTIL_ms_to_timespec(struct timespec* dst, uint64_t t_ms)
 {
     dst->tv_sec = (time_t)(t_ms / 1000);
-    dst->tv_nsec = (int32_t)((t_ms - ((uint32_t)(dst->tv_sec) * 1000)) * LITERAL_1e6);
+    dst->tv_nsec = (int32_t)((t_ms - ((uint64_t)(dst->tv_sec) * 1000)) * LITERAL_1e6);
 }
 
 void UTIL_us_to_timespec(struct timespec* dst, uint64_t t_us)
@@ -74,4 +71,8 @@ void UTIL_us_to_timespec(struct timespec* dst, uint64_t t_us)
     dst->tv_nsec = (int32_t)((t_us - ((uint64_t)(dst->tv_sec) * LITERAL_1e6)) * 1000);
 }
 
-#endif
+void UTIL_ns_to_timespec(struct timespec* dst, uint64_t t_ns)
+{
+    dst->tv_sec = (time_t)(t_ns / LITERAL_1e9);
+    dst->tv_nsec = (int32_t)(t_ns - ((uint64_t)(dst->tv_sec) * LITERAL_1e9));
+}
