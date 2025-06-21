@@ -11,6 +11,7 @@
         "*.h": "cpp",
         "*.c": "c",
         "*.cpp": "cpp",
+        "*.dox": "c",
         "string": "cpp",
         "array": "cpp",
         "atomic": "cpp",
