@@ -151,6 +151,53 @@ size_t UTIL_strnlen(const char* str, size_t n)
     return cnt;
 }
 
+int UTIL_strcmp(const char* lhs, const char* rhs)
+{
+    int r = 0;
+
+    if (lhs && rhs)
+    {
+        while ((*lhs != 0) && (*rhs != 0))
+        {
+            r = ((unsigned char)(*lhs) - (unsigned char)(*rhs));
+
+            if (r != 0) { break; }
+
+            ++lhs;
+            ++rhs;
+        }
+
+        if ((*lhs != 0) || (*rhs != 0)) { r = ((unsigned char)(*lhs) - (unsigned char)(*rhs)); }
+    }
+
+    return r;
+}
+
+int UTIL_strncmp(const char* lhs, const char* rhs, size_t n)
+{
+    int r = 0;
+
+    if (lhs && rhs)
+    {
+        size_t cnt = 0;
+
+        while ((*lhs != 0) && (*rhs != 0) && (cnt < n))
+        {
+            r = ((unsigned char)(*lhs) - (unsigned char)(*rhs));
+
+            if (r != 0) { break; }
+
+            ++lhs;
+            ++rhs;
+            ++cnt;
+        }
+
+        if (((*lhs != 0) || (*rhs != 0)) && (cnt < n)) { r = ((unsigned char)(*lhs) - (unsigned char)(*rhs)); }
+    }
+
+    return r;
+}
+
 const char* UTIL_strchr(const char* str, int ch)
 {
     if (!str) { return NULL; }

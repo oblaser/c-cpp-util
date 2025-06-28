@@ -95,6 +95,12 @@ char* UTIL_strupper_ascii(char* str);
 size_t UTIL_strlen(const char* str);
 size_t UTIL_strnlen(const char* str, size_t n);
 
+int UTIL_strcmp(const char* lhs, const char* rhs);
+int UTIL_strncmp(const char* lhs, const char* rhs, size_t n);
+
+static inline int UTIL_streq(const char* lhs, const char* rhs) { return (UTIL_strcmp(lhs, rhs) == 0); }
+static inline int UTIL_strneq(const char* lhs, const char* rhs, size_t n) { return (UTIL_strncmp(lhs, rhs, n) == 0); }
+
 /**
  * See <a href="https://en.cppreference.com/w/c/string/byte/strchr.html" target="_blank">cppreference.com strchr</a>
  */

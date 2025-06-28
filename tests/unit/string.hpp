@@ -131,6 +131,67 @@ TEST_CASE("string.h string length")
     CHECK(UTIL_strnlen(str2, 5) == 5);
 }
 
+TEST_CASE("string.h compare strings")
+{
+    const char* const lhs = "abcd";
+
+    CHECK(UTIL_strcmp(lhs, "") > 0);
+    CHECK(UTIL_strcmp(lhs, "abc") > 0);
+    CHECK(UTIL_strcmp(lhs, "abcc") > 0);
+    CHECK(UTIL_strcmp(lhs, "abcd") == 0);
+    CHECK(UTIL_strcmp(lhs, "abcde") < 0);
+    CHECK(UTIL_strcmp(lhs, "abce") < 0);
+    CHECK(UTIL_strcmp("", lhs) < 0);
+
+    CHECK(UTIL_strncmp(lhs, "", 2) > 0);
+    CHECK(UTIL_strncmp(lhs, "abc", 2) == 0);
+    CHECK(UTIL_strncmp(lhs, "abcc", 2) == 0);
+    CHECK(UTIL_strncmp(lhs, "abcd", 2) == 0);
+    CHECK(UTIL_strncmp(lhs, "abcde", 2) == 0);
+    CHECK(UTIL_strncmp(lhs, "abce", 2) == 0);
+    CHECK(UTIL_strncmp("", lhs, 2) < 0);
+
+    CHECK(UTIL_strncmp(lhs, "ab", 2) == 0);
+    CHECK(UTIL_strncmp(lhs, "a", 2) > 0);
+
+    CHECK(UTIL_strncmp(lhs, "", 200) > 0);
+    CHECK(UTIL_strncmp(lhs, "abc", 200) > 0);
+    CHECK(UTIL_strncmp(lhs, "abcc", 200) > 0);
+    CHECK(UTIL_strncmp(lhs, "abcd", 200) == 0);
+    CHECK(UTIL_strncmp(lhs, "abcde", 200) < 0);
+    CHECK(UTIL_strncmp(lhs, "abce", 200) < 0);
+    CHECK(UTIL_strncmp("", lhs, 200) < 0);
+
+
+
+    CHECK(UTIL_streq(lhs, "") == 0);
+    CHECK(UTIL_streq(lhs, "abc") == 0);
+    CHECK(UTIL_streq(lhs, "abcc") == 0);
+    CHECK(UTIL_streq(lhs, "abcd") != 0);
+    CHECK(UTIL_streq(lhs, "abcde") == 0);
+    CHECK(UTIL_streq(lhs, "abce") == 0);
+    CHECK(UTIL_streq("", lhs) == 0);
+
+    CHECK(UTIL_strneq(lhs, "", 2) == 0);
+    CHECK(UTIL_strneq(lhs, "abc", 2) != 0);
+    CHECK(UTIL_strneq(lhs, "abcc", 2) != 0);
+    CHECK(UTIL_strneq(lhs, "abcd", 2) != 0);
+    CHECK(UTIL_strneq(lhs, "abcde", 2) != 0);
+    CHECK(UTIL_strneq(lhs, "abce", 2) != 0);
+    CHECK(UTIL_strneq("", lhs, 2) == 0);
+
+    CHECK(UTIL_strneq(lhs, "ab", 2) != 0);
+    CHECK(UTIL_strneq(lhs, "a", 2) == 0);
+
+    CHECK(UTIL_strneq(lhs, "", 200) == 0);
+    CHECK(UTIL_strneq(lhs, "abc", 200) == 0);
+    CHECK(UTIL_strneq(lhs, "abcc", 200) == 0);
+    CHECK(UTIL_strneq(lhs, "abcd", 200) != 0);
+    CHECK(UTIL_strneq(lhs, "abcde", 200) == 0);
+    CHECK(UTIL_strneq(lhs, "abce", 200) == 0);
+    CHECK(UTIL_strneq("", lhs, 200) == 0);
+}
+
 TEST_CASE("string.h find char")
 {
     CHECK(UTIL_strchr(str1, '1') == (str1 + 0));
