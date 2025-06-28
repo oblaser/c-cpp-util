@@ -88,6 +88,8 @@ TEST_CASE("macros.h PP_STR")
 #undef VALUELITERAL_THREE
 #undef VALUELITERAL_THREEABC
 
+
+
 TEST_CASE("macros.h SIZEOF_ARRAY")
 {
     constexpr size_t arraySize = 5;
@@ -101,6 +103,28 @@ TEST_CASE("macros.h SIZEOF_ARRAY")
     CHECK(SIZEOF_ARRAY(ui32) == arraySize);
     CHECK(SIZEOF_ARRAY(ll) == arraySize);
     CHECK(SIZEOF_ARRAY(ts) == arraySize);
+}
+
+TEST_CASE("macros.h SIZEOF_MEMBER")
+{
+    struct test
+    {
+        int8_t i8;
+        int16_t i16;
+        int32_t i32;
+        int64_t i64;
+        float f;
+        double d;
+        void* p;
+    };
+
+    CHECK(SIZEOF_MEMBER(struct test, i8) == 1);
+    CHECK(SIZEOF_MEMBER(struct test, i16) == 2);
+    CHECK(SIZEOF_MEMBER(struct test, i32) == 4);
+    CHECK(SIZEOF_MEMBER(struct test, i64) == 8);
+    CHECK(SIZEOF_MEMBER(struct test, f) == 4);
+    CHECK(SIZEOF_MEMBER(struct test, d) == 8);
+    CHECK(SIZEOF_MEMBER(struct test, p) == sizeof(ptrdiff_t));
 }
 
 TEST_CASE("macros.h BIT")
@@ -190,5 +214,7 @@ TEST_CASE("macros.h ROUNDF")
     CHECK(UTIL_ROUNDF(int, -3.5f) == -4);
     CHECK(UTIL_ROUNDF(int, -3.8f) == -4);
 }
+
+
 
 #endif // IG_TEST_UNIT_MACROS_H

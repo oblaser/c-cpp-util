@@ -64,6 +64,10 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #define SIZEOF_ARRAY(_array) (sizeof(_array) / sizeof((_array)[0]))
 #endif
 
+#ifndef SIZEOF_MEMBER
+#define SIZEOF_MEMBER(_type, _member) (sizeof(((_type*)0)->_member))
+#endif
+
 
 
 #ifndef BIT
@@ -85,7 +89,7 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 
 
 //======================================================================================================================
-// preprocessor macros
+// math macros
 
 #define UTIL_CLAMP(_v, _lo, _hi) ((_v) < (_lo) ? (_lo) : ((_v) > (_hi) ? (_hi) : (_v)))
 
