@@ -220,7 +220,7 @@ const char* UTIL_strnchr(const char* str, int ch, size_t n)
 
     const char* p = str;
 
-    while ((*p != 0) && ((p - str) < n))
+    while ((*p != 0) && ((size_t)(p - str) < n))
     {
         if (*p == (char)ch) { return p; }
         ++p;
