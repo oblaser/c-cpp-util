@@ -70,6 +70,10 @@ static inline int UTIL_isAlnum(int ch) { return (UTIL_isAlpha(ch) || UTIL_isDigi
 /// @{
 
 char* UTIL_strcpy(char* dst, const char* src);
+
+/**
+ * See <a href="https://en.cppreference.com/w/c/string/byte/strncpy.html" target="_blank">cppreference.com strncpy</a>.
+ */
 char* UTIL_strncpy(char* dst, const char* src, size_t n);
 
 char* UTIL_strcat(char* dst, const char* src);

@@ -43,7 +43,11 @@ char* UTIL_strncpy(char* dst, const char* src, size_t n)
             ++cnt;
         }
 
-        if (cnt < n) { *(dst + cnt) = 0; }
+        while (cnt < n)
+        {
+            *(dst + cnt) = 0;
+            ++cnt;
+        }
     }
 
     return dst;
