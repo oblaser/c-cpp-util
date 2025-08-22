@@ -21,6 +21,9 @@ extern "C" {
 
 
 
+/**
+ * Using `SIZE_MAX` as string `npos` indicator.
+ */
 #define UTIL_npos (SIZE_MAX)
 
 
@@ -69,11 +72,20 @@ static inline int UTIL_isAlnum(int ch) { return (UTIL_isAlpha(ch) || UTIL_isDigi
 //! \name String Manipulation
 /// @{
 
+/**
+ * Copies a null terminated string from `src` to the buffer pointed to by `dst`, including the null terminator.
+ *
+ * See <a href="https://en.cppreference.com/w/c/string/byte/strcpy.html" target="_blank">cppreference.com</a> for more detail.
+ *
+ * @param dst Pointer to the buffer to write to
+ * @param src Pointer to the string to read from
+ * @return `dst`
+ */
 char* UTIL_strcpy(char* dst, const char* src);
 
 /**
  * In contrast to the standard `strncpy()`, this implementation stops if, after copying the terminating null character
- * from src, count is not reached.
+ * from `src`, `count` is not reached.
  */
 char* UTIL_strncpy(char* dst, const char* src, size_t n);
 
