@@ -43,11 +43,7 @@ char* UTIL_strncpy(char* dst, const char* src, size_t n)
             ++cnt;
         }
 
-        while (cnt < n)
-        {
-            *(dst + cnt) = 0;
-            ++cnt;
-        }
+        if (cnt < n) { *(dst + cnt) = 0; }
     }
 
     return dst;
@@ -231,5 +227,6 @@ const char* UTIL_strnchr(const char* str, int ch, size_t n)
     }
 
     if ((ch == 0) && (*p == 0)) { return p; }
+
     return NULL;
 }

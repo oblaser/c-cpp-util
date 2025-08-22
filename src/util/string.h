@@ -72,7 +72,8 @@ static inline int UTIL_isAlnum(int ch) { return (UTIL_isAlpha(ch) || UTIL_isDigi
 char* UTIL_strcpy(char* dst, const char* src);
 
 /**
- * See <a href="https://en.cppreference.com/w/c/string/byte/strncpy.html" target="_blank">cppreference.com strncpy</a>.
+ * In contrast to the standard `strncpy()`, this implementation stops if, after copying the terminating null character
+ * from src, count is not reached.
  */
 char* UTIL_strncpy(char* dst, const char* src, size_t n);
 
@@ -93,9 +94,6 @@ char* UTIL_strupper_ascii(char* str);
 //! \name String Examination
 /// @{
 
-/**
- * See <a href="https://en.cppreference.com/w/c/string/byte/strlen.html" target="_blank">cppreference.com strlen</a>.
- */
 size_t UTIL_strlen(const char* str);
 size_t UTIL_strnlen(const char* str, size_t n);
 
@@ -111,7 +109,7 @@ static inline int UTIL_strneq(const char* lhs, const char* rhs, size_t n) { retu
 const char* UTIL_strchr(const char* str, int ch);
 
 /**
- * Like `UTIL_strchr(const char* str, int ch)`, but only searches the first `n` characters.
+ * Like `UTIL_strchr(const char* str, int ch)`, but only the first `n` characters are searched.
  */
 const char* UTIL_strnchr(const char* str, int ch, size_t n);
 
