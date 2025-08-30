@@ -75,19 +75,30 @@ static inline int UTIL_isAlnum(int ch) { return (UTIL_isAlpha(ch) || UTIL_isDigi
 /**
  * Copies a null terminated string from `src` to the buffer pointed to by `dst`, including the null terminator.
  *
- * See <a href="https://en.cppreference.com/w/c/string/byte/strcpy.html" target="_blank">cppreference.com</a> for more detail.
+ * See <a href="https://en.cppreference.com/w/c/string/byte/strcpy.html" target="_blank">cppreference.com</a> for more
+ * detail.
  *
  * @param dst Pointer to the buffer to write to
  * @param src Pointer to the string to read from
+ * @param [out] end _optional_ Pointer to a pointer which will point, after successful operation, to the null terminator
+ * in the destination buffer
  * @return `dst`
  */
-char* UTIL_strcpy(char* dst, const char* src);
+char* UTIL_strcpy(char* dst, const char* src, const char** end);
 
 /**
  * In contrast to the standard `strncpy()`, this implementation stops if, after copying the terminating null character
  * from `src`, `count` is not reached.
+ *
+ * The resulting character array may be not null terminated.
+ *
+ * @param dst Pointer to the buffer to write to
+ * @param src Pointer to the string to read from
+ * @param [out] end _optional_ Pointer to a pointer which will point, after successful operation, to the position after
+ * the last copied character or the null terminator in the destination buffer
+ * @return `dst`
  */
-char* UTIL_strncpy(char* dst, const char* src, size_t n);
+char* UTIL_strncpy(char* dst, const char* src, size_t n, const char** end);
 
 char* UTIL_strcat(char* dst, const char* src);
 

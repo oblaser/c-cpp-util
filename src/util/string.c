@@ -11,7 +11,7 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 
 
 
-char* UTIL_strcpy(char* dst, const char* src)
+char* UTIL_strcpy(char* dst, const char* src, const char** end)
 {
     if (dst && src)
     {
@@ -26,12 +26,14 @@ char* UTIL_strcpy(char* dst, const char* src)
         }
 
         *d = 0;
+
+        if (end) { *end = d; }
     }
 
     return dst;
 }
 
-char* UTIL_strncpy(char* dst, const char* src, size_t n)
+char* UTIL_strncpy(char* dst, const char* src, size_t n, const char** end)
 {
     if (dst && src)
     {
@@ -44,6 +46,8 @@ char* UTIL_strncpy(char* dst, const char* src, size_t n)
         }
 
         if (cnt < n) { *(dst + cnt) = 0; }
+
+        if (end) { *end = (dst + cnt); }
     }
 
     return dst;

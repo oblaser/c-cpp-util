@@ -50,22 +50,39 @@ TEST_CASE("string.h Character Classification")
 
 TEST_CASE("string.h copy string")
 {
+    const char* end = NULL;
+
     char buffer[10];
     REQUIRE(sizeof(buffer) >= (strlen(str1) + 1));
     REQUIRE(sizeof(buffer) >= (strlen(str2) + 1));
 
-    CHECK(strcmp(UTIL_strcpy(buffer, str1 + 1), "23") == 0);
-    CHECK(strcmp(UTIL_strcpy(buffer, str2 + 1), "1b2c3d4") == 0);
 
-    CHECK(strcmp(UTIL_strncpy(strcpy(buffer, "xx#$"), str1, 2), "12#$") == 0);
-    CHECK(strcmp(UTIL_strncpy(strcpy(buffer, "xx#$"), str2, 2), "a1#$") == 0);
 
-    CHECK(strcmp(UTIL_strncpy(strcpy(buffer, "xxx#$"), str1, 3), "123#$") == 0);
+    CHECK(strcmp(UTIL_strcpy(buffer, str1 + 1, &end), "23") == 0);
+    CHECK(end == buffer + 2);
 
-    CHECK(strcmp(UTIL_strncpy(strcpy(buffer, "xxxx#$"), str1, 4), "123") == 0);
+    CHECK(strcmp(UTIL_strcpy(buffer, str2 + 1, &end), "1b2c3d4") == 0);
+    CHECK(end == buffer + 7);
 
-    CHECK(strcmp(UTIL_strncpy(buffer, str1, 200), "123") == 0);
-    CHECK(strcmp(UTIL_strncpy(buffer, str2, 200), "a1b2c3d4") == 0);
+
+
+    CHECK(strcmp(UTIL_strncpy(strcpy(buffer, "xx#$"), str1, 2, &end), "12#$") == 0);
+    CHECK(end == buffer + 2);
+
+    CHECK(strcmp(UTIL_strncpy(strcpy(buffer, "xx#$"), str2, 2, &end), "a1#$") == 0);
+    CHECK(end == buffer + 2);
+
+    CHECK(strcmp(UTIL_strncpy(strcpy(buffer, "xxx#$"), str1, 3, &end), "123#$") == 0);
+    CHECK(end == buffer + 3);
+
+    CHECK(strcmp(UTIL_strncpy(strcpy(buffer, "xxxx#$"), str1, 4, &end), "123") == 0);
+    CHECK(end == buffer + 3);
+
+    CHECK(strcmp(UTIL_strncpy(buffer, str1, 200, &end), "123") == 0);
+    CHECK(end == buffer + 3);
+
+    CHECK(strcmp(UTIL_strncpy(buffer, str2, 200, &end), "a1b2c3d4") == 0);
+    CHECK(end == buffer + 8);
 }
 
 TEST_CASE("string.h concatenate strings")
