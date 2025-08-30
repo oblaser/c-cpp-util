@@ -4,6 +4,7 @@ date            30.08.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
+#include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -238,3 +239,7 @@ const char* UTIL_strnchr(const char* str, int ch, size_t n)
 
     return NULL;
 }
+
+// https://en.cppreference.com/w/c/string/byte/strtol.html
+// https://en.cppreference.com/w/cpp/string/basic_string/stol
+// https://en.cppreference.com/w/c/error/errno_macros.html

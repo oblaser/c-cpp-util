@@ -262,6 +262,24 @@ TEST_CASE("string.h find char")
     CHECK(UTIL_strnchr(str2, 0, 0) == NULL);
 }
 
+TEST_CASE("string.h signed integer to string") {}
+
+TEST_CASE("string.h unsigned integer to string") {}
+
+TEST_CASE("string.h string to signed integer") {}
+
+TEST_CASE("string.h string to unsigned integer") {}
+
+TEST_CASE("string.h signed integer to hex string") {}
+
+TEST_CASE("string.h unsigned integer to hex string") {}
+
+TEST_CASE("string.h hex string to signed integer") {}
+
+TEST_CASE("string.h hex string to unsigned integer") {}
+
+TEST_CASE("string.h data buffer to hex string") {}
+
 
 
 #endif // IG_TEST_UNIT_STRING_H
