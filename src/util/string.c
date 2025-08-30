@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            21.06.2025
+date            30.08.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
@@ -11,7 +11,7 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 
 
 
-char* UTIL_strcpy(char* dst, const char* src, const char** end)
+char* UTIL_strcpy(char* dst, const char* src, char** end)
 {
     if (dst && src)
     {
@@ -33,7 +33,7 @@ char* UTIL_strcpy(char* dst, const char* src, const char** end)
     return dst;
 }
 
-char* UTIL_strncpy(char* dst, const char* src, size_t n, const char** end)
+char* UTIL_strncpy(char* dst, const char* src, size_t n, char** end)
 {
     if (dst && src)
     {
@@ -53,7 +53,7 @@ char* UTIL_strncpy(char* dst, const char* src, size_t n, const char** end)
     return dst;
 }
 
-char* UTIL_strcat(char* dst, const char* src)
+char* UTIL_strcat(char* dst, const char* src, char** end)
 {
     if (dst && src)
     {
@@ -70,12 +70,14 @@ char* UTIL_strcat(char* dst, const char* src)
         }
 
         *d = 0;
+
+        if (end) { *end = d; }
     }
 
     return dst;
 }
 
-char* UTIL_strncat(char* dst, const char* src, size_t n)
+char* UTIL_strncat(char* dst, const char* src, size_t n, char** end)
 {
     if (dst && src)
     {
@@ -94,6 +96,8 @@ char* UTIL_strncat(char* dst, const char* src, size_t n)
         }
 
         *d = 0;
+
+        if (end) { *end = d; }
     }
 
     return dst;

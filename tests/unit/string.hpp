@@ -50,7 +50,7 @@ TEST_CASE("string.h Character Classification")
 
 TEST_CASE("string.h copy string")
 {
-    const char* end = NULL;
+    char* end = NULL;
 
     char buffer[10];
     REQUIRE(sizeof(buffer) >= (strlen(str1) + 1));
@@ -87,6 +87,8 @@ TEST_CASE("string.h copy string")
 
 TEST_CASE("string.h concatenate strings")
 {
+    char* end = NULL;
+
     const char* const baseStr = "qwe#";
     char buffer[16];
     REQUIRE(sizeof(buffer) >= (strlen(baseStr) + strlen(str1) + 1));
@@ -94,31 +96,37 @@ TEST_CASE("string.h concatenate strings")
 
 
 
-    CHECK(strcmp(UTIL_strcat(strcpy(buffer, baseStr), str1 + 1), "qwe#23") == 0);
-    CHECK(strcmp(UTIL_strcat(strcpy(buffer, baseStr), str2 + 1), "qwe#1b2c3d4") == 0);
+    CHECK(strcmp(UTIL_strcat(strcpy(buffer, baseStr), str1 + 1, &end), "qwe#23") == 0);
+    CHECK(end == buffer + 6);
+
+    CHECK(strcmp(UTIL_strcat(strcpy(buffer, baseStr), str2 + 1, &end), "qwe#1b2c3d4") == 0);
+    CHECK(end == buffer + 11);
 
 
 
-    strcpy(strcpy(buffer, baseStr) + strlen(baseStr) + 1, "x#$");
-    CHECK(strcmp(UTIL_strncat(buffer, str1, 2), "qwe#12") == 0);
+    strcpy(strcpy(buffer, baseStr) + strlen(baseStr) + 1, "x#$" /* this should get overwritten */);
+    CHECK(strcmp(UTIL_strncat(buffer, str1, 2, &end), "qwe#12") == 0);
+    CHECK(end == buffer + 6);
 
-    strcpy(strcpy(buffer, baseStr) + strlen(baseStr) + 1, "x#$");
-    CHECK(strcmp(UTIL_strncat(buffer, str2, 2), "qwe#a1") == 0);
+    strcpy(strcpy(buffer, baseStr) + strlen(baseStr) + 1, "x#$" /* this should get overwritten */);
+    CHECK(strcmp(UTIL_strncat(buffer, str2, 2, &end), "qwe#a1") == 0);
+    CHECK(end == buffer + 6);
+
+    strcpy(strcpy(buffer, baseStr) + strlen(baseStr) + 1, "xx#$" /* this should get overwritten */);
+    CHECK(strcmp(UTIL_strncat(buffer, str1, 3, &end), "qwe#123") == 0);
+    CHECK(end == buffer + 7);
+
+    strcpy(strcpy(buffer, baseStr) + strlen(baseStr) + 1, "xxx#$" /* this should get overwritten */);
+    CHECK(strcmp(UTIL_strncat(buffer, str1, 4, &end), "qwe#123") == 0);
+    CHECK(end == buffer + 7);
 
 
 
-    strcpy(strcpy(buffer, baseStr) + strlen(baseStr) + 1, "xx#$");
-    CHECK(strcmp(UTIL_strncat(buffer, str1, 3), "qwe#123") == 0);
+    CHECK(strcmp(UTIL_strncat(strcpy(buffer, baseStr), str1, 200, &end), "qwe#123") == 0);
+    CHECK(end == buffer + 7);
 
-
-
-    strcpy(strcpy(buffer, baseStr) + strlen(baseStr) + 1, "xxx#$");
-    CHECK(strcmp(UTIL_strncat(buffer, str1, 4), "qwe#123") == 0);
-
-
-
-    CHECK(strcmp(UTIL_strncat(strcpy(buffer, baseStr), str1, 200), "qwe#123") == 0);
-    CHECK(strcmp(UTIL_strncat(strcpy(buffer, baseStr), str2, 200), "qwe#a1b2c3d4") == 0);
+    CHECK(strcmp(UTIL_strncat(strcpy(buffer, baseStr), str2, 200, &end), "qwe#a1b2c3d4") == 0);
+    CHECK(end == buffer + 12);
 }
 
 TEST_CASE("string.h case conversion")

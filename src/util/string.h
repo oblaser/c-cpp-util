@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            21.06.2025
+date            30.08.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
@@ -73,7 +73,7 @@ static inline int UTIL_isAlnum(int ch) { return (UTIL_isAlpha(ch) || UTIL_isDigi
 /// @{
 
 /**
- * Copies a null terminated string from `src` to the buffer pointed to by `dst`, including the null terminator.
+ * Copies `src` to `dst`, including the null terminator.
  *
  * See <a href="https://en.cppreference.com/w/c/string/byte/strcpy.html" target="_blank">cppreference.com</a> for more
  * detail.
@@ -84,7 +84,7 @@ static inline int UTIL_isAlnum(int ch) { return (UTIL_isAlpha(ch) || UTIL_isDigi
  * in the destination buffer
  * @return `dst`
  */
-char* UTIL_strcpy(char* dst, const char* src, const char** end);
+char* UTIL_strcpy(char* dst, const char* src, char** end);
 
 /**
  * In contrast to the standard `strncpy()`, this implementation stops if, after copying the terminating null character
@@ -98,14 +98,35 @@ char* UTIL_strcpy(char* dst, const char* src, const char** end);
  * the last copied character or the null terminator in the destination buffer
  * @return `dst`
  */
-char* UTIL_strncpy(char* dst, const char* src, size_t n, const char** end);
-
-char* UTIL_strcat(char* dst, const char* src);
+char* UTIL_strncpy(char* dst, const char* src, size_t n, char** end);
 
 /**
- * Always appends a null terminator.
+ * Appends `src` to `dst`, including the null terminator.
+ *
+ * See <a href="https://en.cppreference.com/w/c/string/byte/strcat.html" target="_blank">cppreference.com</a> for more
+ * detail.
+ *
+ * @param dst Pointer to the buffer to append to
+ * @param src Pointer to the string to read from
+ * @param [out] end _optional_ Pointer to a pointer which will point, after successful operation, to the null terminator
+ * in the destination buffer
+ * @return `dst`
  */
-char* UTIL_strncat(char* dst, const char* src, size_t n);
+char* UTIL_strcat(char* dst, const char* src, char** end);
+
+/**
+ * Always appends a null terminator, thus `n+1` characters may be written to `dst`.
+ *
+ * See <a href="https://en.cppreference.com/w/c/string/byte/strncat.html" target="_blank">cppreference.com</a> for more
+ * detail.
+ *
+ * @param dst Pointer to the buffer to append to
+ * @param src Pointer to the string to read from
+ * @param [out] end _optional_ Pointer to a pointer which will point, after successful operation, to the null terminator
+ * in the destination buffer
+ * @return `dst`
+ */
+char* UTIL_strncat(char* dst, const char* src, size_t n, char** end);
 
 char* UTIL_strlower_ascii(char* str);
 char* UTIL_strupper_ascii(char* str);
