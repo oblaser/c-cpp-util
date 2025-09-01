@@ -222,7 +222,14 @@ static inline int16_t UTIL_xstoi16(const char* str, char** end) { return (int16_
 static inline int32_t UTIL_xstoi32(const char* str, char** end) { return (int32_t)UTIL_xstoui32(str, end); }
 static inline int64_t UTIL_xstoi64(const char* str, char** end) { return (int64_t)UTIL_xstoui64(str, end); }
 
+/**
+ * If `count` is `0`: `*dst=0` and `*end=dst`.
+ */
 char* UTIL_dataToHexStr(char* dst, const uint8_t* data, size_t count, char** end);
+
+/**
+ * If `count` is `0`: `*dst=0` and `*end=dst`.
+ */
 char* UTIL_dataToHexStrDelim(char* dst, const uint8_t* data, size_t count, char delimiter, char** end);
 
 /// @}

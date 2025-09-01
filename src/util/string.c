@@ -12,6 +12,10 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 
 
 
+static const char hexDigits[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+
+
+
 char* UTIL_strcpy(char* dst, const char* src, char** end)
 {
     if (dst && src)
@@ -238,6 +242,126 @@ const char* UTIL_strnchr(const char* str, int ch, size_t n)
     if ((ch == 0) && (*p == 0)) { return p; }
 
     return NULL;
+}
+
+char* UTIL_ui8toxs(char* dst, uint8_t value, char** end)
+{
+    if (dst)
+    {
+        *(dst + 0) = hexDigits[value >> 4];
+        *(dst + 1) = hexDigits[value & 0x0F];
+        *(dst + 2) = 0;
+
+        if (end) { *end = dst + 2; }
+    }
+
+    return dst;
+}
+
+char* UTIL_ui16toxs(char* dst, uint16_t value, char** end)
+{
+    if (dst)
+    {
+        *(dst + 0) = hexDigits[value >> 12];
+        *(dst + 1) = hexDigits[(value >> 8) & 0x000F];
+        *(dst + 2) = hexDigits[(value >> 4) & 0x000F];
+        *(dst + 3) = hexDigits[value & 0x000F];
+        *(dst + 4) = 0;
+
+        if (end) { *end = dst + 4; }
+    }
+
+    return dst;
+}
+
+char* UTIL_ui32toxs(char* dst, uint32_t value, char** end)
+{
+    if (dst)
+    {
+        *(dst + 0) = hexDigits[value >> 28];
+        *(dst + 1) = hexDigits[(value >> 24) & 0x0000000F];
+        *(dst + 2) = hexDigits[(value >> 20) & 0x0000000F];
+        *(dst + 3) = hexDigits[(value >> 16) & 0x0000000F];
+        *(dst + 4) = hexDigits[(value >> 12) & 0x0000000F];
+        *(dst + 5) = hexDigits[(value >> 8) & 0x0000000F];
+        *(dst + 6) = hexDigits[(value >> 4) & 0x0000000F];
+        *(dst + 7) = hexDigits[value & 0x0000000F];
+        *(dst + 8) = 0;
+
+        if (end) { *end = dst + 8; }
+    }
+
+    return dst;
+}
+
+char* UTIL_ui64toxs(char* dst, uint64_t value, char** end)
+{
+    if (dst)
+    {
+        *(dst + 0) = hexDigits[value >> 60];
+        *(dst + 1) = hexDigits[(value >> 56) & 0x000000000000000F];
+        *(dst + 2) = hexDigits[(value >> 52) & 0x000000000000000F];
+        *(dst + 3) = hexDigits[(value >> 48) & 0x000000000000000F];
+        *(dst + 4) = hexDigits[(value >> 44) & 0x000000000000000F];
+        *(dst + 5) = hexDigits[(value >> 40) & 0x000000000000000F];
+        *(dst + 6) = hexDigits[(value >> 36) & 0x000000000000000F];
+        *(dst + 7) = hexDigits[(value >> 32) & 0x000000000000000F];
+        *(dst + 8) = hexDigits[(value >> 28) & 0x000000000000000F];
+        *(dst + 9) = hexDigits[(value >> 24) & 0x000000000000000F];
+        *(dst + 10) = hexDigits[(value >> 20) & 0x000000000000000F];
+        *(dst + 11) = hexDigits[(value >> 16) & 0x000000000000000F];
+        *(dst + 12) = hexDigits[(value >> 12) & 0x000000000000000F];
+        *(dst + 13) = hexDigits[(value >> 8) & 0x000000000000000F];
+        *(dst + 14) = hexDigits[(value >> 4) & 0x000000000000000F];
+        *(dst + 15) = hexDigits[value & 0x000000000000000F];
+        *(dst + 16) = 0;
+
+        if (end) { *end = dst + 16; }
+    }
+
+    return dst;
+}
+
+char* UTIL_dataToHexStr(char* dst, const uint8_t* data, size_t count, char** end)
+{
+    if (dst)
+    {
+        char* p = dst;
+
+        for (size_t i = 0; i < count; ++i)
+        {
+            *(p++) = hexDigits[*(data + i) >> 4];
+            *(p++) = hexDigits[*(data + i) & 0x0F];
+        }
+
+        *p = 0;
+
+        if (end) { *end = p; }
+    }
+
+    return dst;
+}
+
+char* UTIL_dataToHexStrDelim(char* dst, const uint8_t* data, size_t count, char delimiter, char** end)
+{
+    if (dst)
+    {
+        char* p = dst;
+
+        for (size_t i = 0; i < count; ++i)
+        {
+            if (i > 0) { *(p++) = delimiter; }
+
+            *(p++) = hexDigits[*(data + i) >> 4];
+            *(p++) = hexDigits[*(data + i) & 0x0F];
+        }
+
+        *p = 0;
+
+        if (end) { *end = p; }
+    }
+
+    return dst;
 }
 
 // https://en.cppreference.com/w/c/string/byte/strtol.html

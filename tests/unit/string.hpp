@@ -50,7 +50,7 @@ TEST_CASE("string.h Character Classification")
 
 TEST_CASE("string.h copy string")
 {
-    char* end = NULL;
+    char* end;
 
     char buffer[10];
     REQUIRE(sizeof(buffer) >= (strlen(str1) + 1));
@@ -58,36 +58,44 @@ TEST_CASE("string.h copy string")
 
 
 
+    end = NULL;
     CHECK(strcmp(UTIL_strcpy(buffer, str1 + 1, &end), "23") == 0);
     CHECK(end == buffer + 2);
 
+    end = NULL;
     CHECK(strcmp(UTIL_strcpy(buffer, str2 + 1, &end), "1b2c3d4") == 0);
     CHECK(end == buffer + 7);
 
 
 
+    end = NULL;
     CHECK(strcmp(UTIL_strncpy(strcpy(buffer, "xx#$"), str1, 2, &end), "12#$") == 0);
     CHECK(end == buffer + 2);
 
+    end = NULL;
     CHECK(strcmp(UTIL_strncpy(strcpy(buffer, "xx#$"), str2, 2, &end), "a1#$") == 0);
     CHECK(end == buffer + 2);
 
+    end = NULL;
     CHECK(strcmp(UTIL_strncpy(strcpy(buffer, "xxx#$"), str1, 3, &end), "123#$") == 0);
     CHECK(end == buffer + 3);
 
+    end = NULL;
     CHECK(strcmp(UTIL_strncpy(strcpy(buffer, "xxxx#$"), str1, 4, &end), "123") == 0);
     CHECK(end == buffer + 3);
 
+    end = NULL;
     CHECK(strcmp(UTIL_strncpy(buffer, str1, 200, &end), "123") == 0);
     CHECK(end == buffer + 3);
 
+    end = NULL;
     CHECK(strcmp(UTIL_strncpy(buffer, str2, 200, &end), "a1b2c3d4") == 0);
     CHECK(end == buffer + 8);
 }
 
 TEST_CASE("string.h concatenate strings")
 {
-    char* end = NULL;
+    char* end;
 
     const char* const baseStr = "qwe#";
     char buffer[16];
@@ -96,35 +104,43 @@ TEST_CASE("string.h concatenate strings")
 
 
 
+    end = NULL;
     CHECK(strcmp(UTIL_strcat(strcpy(buffer, baseStr), str1 + 1, &end), "qwe#23") == 0);
     CHECK(end == buffer + 6);
 
+    end = NULL;
     CHECK(strcmp(UTIL_strcat(strcpy(buffer, baseStr), str2 + 1, &end), "qwe#1b2c3d4") == 0);
     CHECK(end == buffer + 11);
 
 
 
+    end = NULL;
     strcpy(strcpy(buffer, baseStr) + strlen(baseStr) + 1, "x#$" /* this should get overwritten */);
     CHECK(strcmp(UTIL_strncat(buffer, str1, 2, &end), "qwe#12") == 0);
     CHECK(end == buffer + 6);
 
+    end = NULL;
     strcpy(strcpy(buffer, baseStr) + strlen(baseStr) + 1, "x#$" /* this should get overwritten */);
     CHECK(strcmp(UTIL_strncat(buffer, str2, 2, &end), "qwe#a1") == 0);
     CHECK(end == buffer + 6);
 
+    end = NULL;
     strcpy(strcpy(buffer, baseStr) + strlen(baseStr) + 1, "xx#$" /* this should get overwritten */);
     CHECK(strcmp(UTIL_strncat(buffer, str1, 3, &end), "qwe#123") == 0);
     CHECK(end == buffer + 7);
 
+    end = NULL;
     strcpy(strcpy(buffer, baseStr) + strlen(baseStr) + 1, "xxx#$" /* this should get overwritten */);
     CHECK(strcmp(UTIL_strncat(buffer, str1, 4, &end), "qwe#123") == 0);
     CHECK(end == buffer + 7);
 
 
 
+    end = NULL;
     CHECK(strcmp(UTIL_strncat(strcpy(buffer, baseStr), str1, 200, &end), "qwe#123") == 0);
     CHECK(end == buffer + 7);
 
+    end = NULL;
     CHECK(strcmp(UTIL_strncat(strcpy(buffer, baseStr), str2, 200, &end), "qwe#a1b2c3d4") == 0);
     CHECK(end == buffer + 12);
 }
@@ -270,15 +286,91 @@ TEST_CASE("string.h string to signed integer") {}
 
 TEST_CASE("string.h string to unsigned integer") {}
 
-TEST_CASE("string.h signed integer to hex string") {}
+TEST_CASE("string.h integer to hex string")
+{
+    char* end;
+    char buffer[17];
 
-TEST_CASE("string.h unsigned integer to hex string") {}
+    auto reset = [&]() {
+        end = NULL;
+        for (size_t i = 0; i < sizeof(buffer); ++i) { buffer[i] = '#'; }
+        buffer[sizeof(buffer) - 1] = 0;
+    };
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_ui8toxs(buffer, 0xBC, &end), "BC") == 0);
+    CHECK(end == buffer + 2);
+
+    reset();
+    CHECK(strcmp(UTIL_ui16toxs(buffer, 0x5678, &end), "5678") == 0);
+    CHECK(end == buffer + 4);
+
+    reset();
+    CHECK(strcmp(UTIL_ui32toxs(buffer, 0x89ABCDEF, &end), "89ABCDEF") == 0);
+    CHECK(end == buffer + 8);
+
+    reset();
+    CHECK(strcmp(UTIL_ui64toxs(buffer, 0x0123456789ABCDEF, &end), "0123456789ABCDEF") == 0);
+    CHECK(end == buffer + 16);
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_i8toxs(buffer, -1, &end), "FF") == 0);
+    CHECK(end == buffer + 2);
+
+    reset();
+    CHECK(strcmp(UTIL_i16toxs(buffer, -5103, &end), "EC11") == 0);
+    CHECK(end == buffer + 4);
+
+    reset();
+    CHECK(strcmp(UTIL_i32toxs(buffer, -701234, &end), "FFF54CCE") == 0);
+    CHECK(end == buffer + 8);
+
+    reset();
+    CHECK(strcmp(UTIL_i64toxs(buffer, -123456789, &end), "FFFFFFFFF8A432EB") == 0);
+    CHECK(end == buffer + 16);
+}
 
 TEST_CASE("string.h hex string to signed integer") {}
 
 TEST_CASE("string.h hex string to unsigned integer") {}
 
-TEST_CASE("string.h data buffer to hex string") {}
+TEST_CASE("string.h data buffer to hex string")
+{
+    char* end;
+    char buffer[12];
+
+    auto reset = [&]() {
+        end = NULL;
+        for (size_t i = 0; i < sizeof(buffer); ++i) { buffer[i] = '#'; }
+        buffer[sizeof(buffer) - 1] = 0;
+    };
+
+    const uint8_t data[] = { 0x30, 0x35, 'A', 'b' };
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_dataToHexStr(buffer, data, sizeof(data), &end), "30354162") == 0);
+    CHECK(end == buffer + 8);
+
+    reset();
+    CHECK(strcmp(UTIL_dataToHexStr(buffer, data, 0, &end), "") == 0);
+    CHECK(end == buffer + 0);
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_dataToHexStrDelim(buffer, data, sizeof(data), '$', &end), "30$35$41$62") == 0);
+    CHECK(end == buffer + 11);
+
+    reset();
+    CHECK(strcmp(UTIL_dataToHexStrDelim(buffer, data, 0, '$', &end), "") == 0);
+    CHECK(end == buffer + 0);
+}
 
 
 
