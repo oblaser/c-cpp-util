@@ -244,6 +244,69 @@ const char* UTIL_strnchr(const char* str, int ch, size_t n)
     return NULL;
 }
 
+int UTIL_isIntStr(const char* str, size_t count)
+{
+    if (str && (str[0] == '-'))
+    {
+        ++str;
+        --count;
+    }
+
+    return UTIL_isUIntStr(str, count);
+}
+
+int UTIL_isUIntStr(const char* str, size_t count)
+{
+    int r = 0;
+
+    if (str && (*str != 0) && (count > 0))
+    {
+        r = 1;
+
+        while ((*str != 0) && (count > 0))
+        {
+            if ((*str < '0') || (*str > '9'))
+            {
+                r = 0;
+                break;
+            }
+
+            ++str;
+            --count;
+        }
+    }
+
+    return r;
+}
+
+int UTIL_isHexStr(const char* str, size_t count)
+{
+    int r = 0;
+
+    if (str && (*str != 0) && (count > 0))
+    {
+        r = 1;
+
+        while ((*str != 0) && (count > 0))
+        {
+            if (!( // clang-format off
+                ((*str >= '0') && (*str <= '9')) ||
+                ((*str >= 'A') && (*str <= 'F')) ||
+                ((*str >= 'a') && (*str <= 'f'))
+                )) // clang-format on
+            {
+                r = 0;
+                break;
+            }
+
+            ++str;
+            --count;
+        }
+    }
+
+    return r;
+}
+
 char* UTIL_ui8toxs(char* dst, uint8_t value, char** end)
 {
     if (dst)

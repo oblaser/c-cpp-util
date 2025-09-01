@@ -278,6 +278,132 @@ TEST_CASE("string.h find char")
     CHECK(UTIL_strnchr(str2, 0, 0) == NULL);
 }
 
+TEST_CASE("string.h String Classification integer")
+{
+    CHECK(UTIL_isIntStr(NULL, UTIL_npos) == 0);
+    CHECK(UTIL_isIntStr("", UTIL_npos) == 0);
+    CHECK(UTIL_isIntStr("123", 0) == 0);
+
+    CHECK(UTIL_isIntStr("a123", UTIL_npos) == 0);
+    CHECK(UTIL_isIntStr("a", UTIL_npos) == 0);
+    CHECK(UTIL_isIntStr("abc", UTIL_npos) == 0);
+    CHECK(UTIL_isIntStr("-", UTIL_npos) == 0);
+
+    CHECK(UTIL_isIntStr("-abc", UTIL_npos) == 0);
+    CHECK(UTIL_isIntStr("-abc", 1) == 0);
+
+    CHECK(UTIL_isIntStr("123abc", UTIL_npos) == 0);
+    CHECK(UTIL_isIntStr("123abc", 3) != 0);
+    CHECK(UTIL_isIntStr("123abc", 4) == 0);
+
+    CHECK(UTIL_isIntStr("123 abc", UTIL_npos) == 0);
+    CHECK(UTIL_isIntStr("123 abc", 3) != 0);
+    CHECK(UTIL_isIntStr("123 abc", 4) == 0);
+
+    CHECK(UTIL_isIntStr("-123abc", UTIL_npos) == 0);
+    CHECK(UTIL_isIntStr("-123abc", 4) != 0);
+    CHECK(UTIL_isIntStr("-123abc", 5) == 0);
+
+    CHECK(UTIL_isIntStr("-123 abc", UTIL_npos) == 0);
+    CHECK(UTIL_isIntStr("-123 abc", 4) != 0);
+    CHECK(UTIL_isIntStr("-123 abc", 5) == 0);
+
+    CHECK(UTIL_isIntStr("0", UTIL_npos) != 0);
+    CHECK(UTIL_isIntStr("-0", UTIL_npos) != 0);
+    CHECK(UTIL_isIntStr("-1", UTIL_npos) != 0);
+    CHECK(UTIL_isIntStr("-123", UTIL_npos) != 0);
+    CHECK(UTIL_isIntStr("1", UTIL_npos) != 0);
+    CHECK(UTIL_isIntStr("123", UTIL_npos) != 0);
+
+
+
+    CHECK(UTIL_isUIntStr(NULL, UTIL_npos) == 0);
+    CHECK(UTIL_isUIntStr("", UTIL_npos) == 0);
+    CHECK(UTIL_isUIntStr("123", 0) == 0);
+
+    CHECK(UTIL_isUIntStr("a123", UTIL_npos) == 0);
+    CHECK(UTIL_isUIntStr("a", UTIL_npos) == 0);
+    CHECK(UTIL_isUIntStr("abc", UTIL_npos) == 0);
+    CHECK(UTIL_isUIntStr("-", UTIL_npos) == 0);
+    CHECK(UTIL_isUIntStr("-abc", UTIL_npos) == 0);
+
+    CHECK(UTIL_isUIntStr("123abc", UTIL_npos) == 0);
+    CHECK(UTIL_isUIntStr("123abc", 3) != 0);
+    CHECK(UTIL_isUIntStr("123abc", 4) == 0);
+
+    CHECK(UTIL_isUIntStr("123 abc", UTIL_npos) == 0);
+    CHECK(UTIL_isUIntStr("123 abc", 3) != 0);
+    CHECK(UTIL_isUIntStr("123 abc", 4) == 0);
+
+    CHECK(UTIL_isUIntStr("-123abc", UTIL_npos) == 0);
+    CHECK(UTIL_isUIntStr("-123abc", 4) == 0);
+    CHECK(UTIL_isUIntStr("-123abc", 5) == 0);
+
+    CHECK(UTIL_isUIntStr("-123 abc", UTIL_npos) == 0);
+    CHECK(UTIL_isUIntStr("-123 abc", 4) == 0);
+    CHECK(UTIL_isUIntStr("-123 abc", 5) == 0);
+
+    CHECK(UTIL_isUIntStr("0", UTIL_npos) != 0);
+    CHECK(UTIL_isUIntStr("-0", UTIL_npos) == 0);
+    CHECK(UTIL_isUIntStr("-1", UTIL_npos) == 0);
+    CHECK(UTIL_isUIntStr("-123", UTIL_npos) == 0);
+    CHECK(UTIL_isUIntStr("1", UTIL_npos) != 0);
+    CHECK(UTIL_isUIntStr("123", UTIL_npos) != 0);
+}
+
+TEST_CASE("string.h String Classification hex")
+{
+    const char* s1 = "3F5";
+
+    CHECK(UTIL_isHexStr(s1, UTIL_npos) != 0);
+    CHECK(UTIL_isHexStr("0123456789ABCDEF", UTIL_npos) != 0);
+    CHECK(UTIL_isHexStr("0123456789abcdef", UTIL_npos) != 0);
+    CHECK(UTIL_isHexStr("0123456789ABCDEF0123", UTIL_npos) != 0);
+
+    CHECK(UTIL_isHexStr(NULL, UTIL_npos) == 0);
+    CHECK(UTIL_isHexStr("", UTIL_npos) == 0);
+    CHECK(UTIL_isHexStr("0x3F", UTIL_npos) == 0);
+
+    for (int c = 0; c <= 0xFF; ++c)
+    {
+        const char chr = (char)c;
+        const char hexStr[] = { '5', 'a', chr, 0 };
+        bool expectedResult;
+
+        if (((chr >= '0') && (chr <= '9')) || ((chr >= 'A') && (chr <= 'F')) || ((chr >= 'a') && (chr <= 'f'))) { expectedResult = true; }
+        else { expectedResult = false; }
+
+        if (chr == 0) { expectedResult = true; }
+        if (expectedResult) { CHECK(UTIL_isHexStr(hexStr, UTIL_npos) != 0); }
+        else { CHECK(UTIL_isHexStr(hexStr, UTIL_npos) == 0); }
+    }
+
+    const char* substrTest = "AB-06CD;12345-a4d902q";
+
+    CHECK(UTIL_isHexStr(substrTest, UTIL_npos) == 0);
+    CHECK(UTIL_isHexStr(substrTest + 0, 2) != 0);
+    CHECK(UTIL_isHexStr(substrTest + 0, 3) == 0);
+    CHECK(UTIL_isHexStr(substrTest + 3, 4) != 0);
+    CHECK(UTIL_isHexStr(substrTest + 8, 5) != 0);
+    CHECK(UTIL_isHexStr(substrTest + 8, 6) == 0);
+    CHECK(UTIL_isHexStr(substrTest + 14, 6) != 0);
+    CHECK(UTIL_isHexStr(substrTest + 14, 7) == 0);
+    CHECK(UTIL_isHexStr(substrTest + 18, 1) != 0);
+    CHECK(UTIL_isHexStr(substrTest + 20, 1) == 0);
+    CHECK(UTIL_isHexStr(substrTest + 20, 2) == 0);
+
+    substrTest = "12345-a4d902";
+
+    CHECK(UTIL_isHexStr(substrTest, UTIL_npos) == 0);
+    CHECK(UTIL_isHexStr(substrTest + 6, UTIL_npos) != 0);
+    CHECK(UTIL_isHexStr(substrTest + 6, 100) != 0);
+    CHECK(UTIL_isHexStr(substrTest + 5, 100) == 0);
+
+    CHECK(UTIL_isHexStr(substrTest + 12, UTIL_npos) == 0);
+    CHECK(UTIL_isHexStr(substrTest + 12, 5) == 0);
+    CHECK(UTIL_isHexStr(substrTest + 1, 0) == 0);
+}
+
 TEST_CASE("string.h signed integer to string") {}
 
 TEST_CASE("string.h unsigned integer to string") {}

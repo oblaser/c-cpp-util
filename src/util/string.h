@@ -161,6 +161,17 @@ const char* UTIL_strnchr(const char* str, int ch, size_t n);
 
 
 
+//! \name String Classification
+/// @{
+
+int UTIL_isIntStr(const char* str, size_t count);
+int UTIL_isUIntStr(const char* str, size_t count);
+int UTIL_isHexStr(const char* str, size_t count);
+
+/// @}
+
+
+
 //! \name String Conversion
 //!
 //! <b>number to string</b>
