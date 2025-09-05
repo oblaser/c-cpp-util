@@ -172,7 +172,7 @@ int UTIL_isHexStr(const char* str, size_t count);
 
 
 
-//! \name String Conversion
+//! \name Decimal String Conversion
 //!
 //! <b>number to string</b>
 //! Parameters:
@@ -187,8 +187,8 @@ int UTIL_isHexStr(const char* str, size_t count);
 //! - `str` Pointer to a string to be converted
 //! - `end` [out] <i>optional</i> Pointer to a pointer which will point to the character after the converted number
 //!
-//! If the value is too big for the target data type, `errno` is set to `ERANGE` and the types minimal/maximal value is
-//! returned.
+//! If the value is too big for the target data type, `errno` is set to `ERANGE` and the types maximal or minimal value
+//! is returned.
 //! If the string does not represent a number, `errno` is set to `EINVAL` and `0` is returned.
 //!
 /// @{
@@ -213,6 +213,25 @@ uint16_t UTIL_stoui16(const char* str, char** end);
 uint32_t UTIL_stoui32(const char* str, char** end);
 uint64_t UTIL_stoui64(const char* str, char** end);
 
+/// @}
+
+
+
+//! \name Hex String Conversion
+//!
+//! <b>number to string</b>
+//! Parameters:
+//! - `dst` Pointer to the buffer to write to
+//! - `value` The value to be converted
+//! - `end` [out] <i>optional</i> Pointer to a pointer which will point, after successful operation, to the null
+//!   terminator in the destination buffer
+//!
+//! <b>string to number</b>
+//! A fixed number of characters (corresponding to the target data type) are converted from the string. If the string is
+//! not a valid hex representation, `errno` is set to `EINVAL` and the return value is invalid.
+//!
+/// @{
+
 char* UTIL_ui8toxs(char* dst, uint8_t value, char** end);
 char* UTIL_ui16toxs(char* dst, uint16_t value, char** end);
 char* UTIL_ui32toxs(char* dst, uint32_t value, char** end);
@@ -223,15 +242,15 @@ static inline char* UTIL_i16toxs(char* dst, int16_t value, char** end) { return 
 static inline char* UTIL_i32toxs(char* dst, int32_t value, char** end) { return UTIL_ui32toxs(dst, (uint32_t)value, end); }
 static inline char* UTIL_i64toxs(char* dst, int64_t value, char** end) { return UTIL_ui64toxs(dst, (uint64_t)value, end); }
 
-uint8_t UTIL_xstoui8(const char* str, char** end);
-uint16_t UTIL_xstoui16(const char* str, char** end);
-uint32_t UTIL_xstoui32(const char* str, char** end);
-uint64_t UTIL_xstoui64(const char* str, char** end);
+uint8_t UTIL_xstoui8(const char* str);
+uint16_t UTIL_xstoui16(const char* str);
+uint32_t UTIL_xstoui32(const char* str);
+uint64_t UTIL_xstoui64(const char* str);
 
-static inline int8_t UTIL_xstoi8(const char* str, char** end) { return (int8_t)UTIL_xstoui8(str, end); }
-static inline int16_t UTIL_xstoi16(const char* str, char** end) { return (int16_t)UTIL_xstoui16(str, end); }
-static inline int32_t UTIL_xstoi32(const char* str, char** end) { return (int32_t)UTIL_xstoui32(str, end); }
-static inline int64_t UTIL_xstoi64(const char* str, char** end) { return (int64_t)UTIL_xstoui64(str, end); }
+static inline int8_t UTIL_xstoi8(const char* str) { return (int8_t)UTIL_xstoui8(str); }
+static inline int16_t UTIL_xstoi16(const char* str) { return (int16_t)UTIL_xstoui16(str); }
+static inline int32_t UTIL_xstoi32(const char* str) { return (int32_t)UTIL_xstoui32(str); }
+static inline int64_t UTIL_xstoi64(const char* str) { return (int64_t)UTIL_xstoui64(str); }
 
 /**
  * If `count` is `0`: `*dst=0` and `*end=dst`.

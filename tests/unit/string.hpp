@@ -8,9 +8,11 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #define IG_TEST_UNIT_STRING_H
 
 #include <ctype.h>
+#include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
 
+#include "util/macros.h"
 #include "util/string.h"
 
 #include "catch2/catch.hpp"
@@ -460,9 +462,76 @@ TEST_CASE("string.h integer to hex string")
     CHECK(end == buffer + 16);
 }
 
-TEST_CASE("string.h hex string to signed integer") {}
+TEST_CASE("string.h hex string to integer")
+{
+    const char* str;
 
-TEST_CASE("string.h hex string to unsigned integer") {}
+    auto reset = [&](const char* s) {
+        str = s;
+        errno = 0;
+    };
+
+
+
+    reset("AbCdEf0123456789");
+    CHECK(UTIL_xstoui8(str) == 0xAB);
+    CHECK(UTIL_xstoui16(str + 3) == 0xDEF0);
+    CHECK(UTIL_xstoui32(str + 5) == 0xF0123456);
+    CHECK(UTIL_xstoui64(str) == 0xABCDEF0123456789ull);
+    CHECK(UTIL_xstoi8(str) == -85);
+    CHECK(UTIL_xstoi16(str + 3) == -8464);
+    CHECK(UTIL_xstoi32(str + 5) == -267242410);
+    CHECK(UTIL_xstoi64(str) == -6066930334832433271);
+    CHECK(errno == 0);
+
+
+
+    const char* badStrings[] = {
+        NULL,
+        "",
+        "2",
+        "FG00000000000000",
+    };
+
+    for (size_t i = 0; i < SIZEOF_ARRAY(badStrings); ++i)
+    {
+        volatile int64_t d;
+
+        reset(badStrings[i]);
+        d = UTIL_xstoui8(str);
+        CHECK(errno == EINVAL);
+
+        reset(badStrings[i]);
+        d = UTIL_xstoui16(str);
+        CHECK(errno == EINVAL);
+
+        reset(badStrings[i]);
+        d = UTIL_xstoui32(str);
+        CHECK(errno == EINVAL);
+
+        reset(badStrings[i]);
+        d = UTIL_xstoui64(str);
+        CHECK(errno == EINVAL);
+
+        reset(badStrings[i]);
+        d = UTIL_xstoi8(str);
+        CHECK(errno == EINVAL);
+
+        reset(badStrings[i]);
+        d = UTIL_xstoi16(str);
+        CHECK(errno == EINVAL);
+
+        reset(badStrings[i]);
+        d = UTIL_xstoi32(str);
+        CHECK(errno == EINVAL);
+
+        reset(badStrings[i]);
+        d = UTIL_xstoi64(str);
+        CHECK(errno == EINVAL);
+
+        (void)d;
+    }
+}
 
 TEST_CASE("string.h data buffer to hex string")
 {

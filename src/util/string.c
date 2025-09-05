@@ -16,6 +16,10 @@ static const char hexDigits[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8',
 
 
 
+static uint8_t xctonv(char ch);
+
+
+
 char* UTIL_strcpy(char* dst, const char* src, char** end)
 {
     if (dst && src)
@@ -307,6 +311,10 @@ int UTIL_isHexStr(const char* str, size_t count)
     return r;
 }
 
+// https://en.cppreference.com/w/c/string/byte/strtol.html
+// https://en.cppreference.com/w/cpp/string/basic_string/stol
+// https://en.cppreference.com/w/c/error/errno_macros.html
+
 char* UTIL_ui8toxs(char* dst, uint8_t value, char** end)
 {
     if (dst)
@@ -362,27 +370,100 @@ char* UTIL_ui64toxs(char* dst, uint64_t value, char** end)
     if (dst)
     {
         *(dst + 0) = hexDigits[value >> 60];
-        *(dst + 1) = hexDigits[(value >> 56) & 0x000000000000000F];
-        *(dst + 2) = hexDigits[(value >> 52) & 0x000000000000000F];
-        *(dst + 3) = hexDigits[(value >> 48) & 0x000000000000000F];
-        *(dst + 4) = hexDigits[(value >> 44) & 0x000000000000000F];
-        *(dst + 5) = hexDigits[(value >> 40) & 0x000000000000000F];
-        *(dst + 6) = hexDigits[(value >> 36) & 0x000000000000000F];
-        *(dst + 7) = hexDigits[(value >> 32) & 0x000000000000000F];
-        *(dst + 8) = hexDigits[(value >> 28) & 0x000000000000000F];
-        *(dst + 9) = hexDigits[(value >> 24) & 0x000000000000000F];
-        *(dst + 10) = hexDigits[(value >> 20) & 0x000000000000000F];
-        *(dst + 11) = hexDigits[(value >> 16) & 0x000000000000000F];
-        *(dst + 12) = hexDigits[(value >> 12) & 0x000000000000000F];
-        *(dst + 13) = hexDigits[(value >> 8) & 0x000000000000000F];
-        *(dst + 14) = hexDigits[(value >> 4) & 0x000000000000000F];
-        *(dst + 15) = hexDigits[value & 0x000000000000000F];
+        *(dst + 1) = hexDigits[(value >> 56) & 0x000000000000000Full];
+        *(dst + 2) = hexDigits[(value >> 52) & 0x000000000000000Full];
+        *(dst + 3) = hexDigits[(value >> 48) & 0x000000000000000Full];
+        *(dst + 4) = hexDigits[(value >> 44) & 0x000000000000000Full];
+        *(dst + 5) = hexDigits[(value >> 40) & 0x000000000000000Full];
+        *(dst + 6) = hexDigits[(value >> 36) & 0x000000000000000Full];
+        *(dst + 7) = hexDigits[(value >> 32) & 0x000000000000000Full];
+        *(dst + 8) = hexDigits[(value >> 28) & 0x000000000000000Full];
+        *(dst + 9) = hexDigits[(value >> 24) & 0x000000000000000Full];
+        *(dst + 10) = hexDigits[(value >> 20) & 0x000000000000000Full];
+        *(dst + 11) = hexDigits[(value >> 16) & 0x000000000000000Full];
+        *(dst + 12) = hexDigits[(value >> 12) & 0x000000000000000Full];
+        *(dst + 13) = hexDigits[(value >> 8) & 0x000000000000000Full];
+        *(dst + 14) = hexDigits[(value >> 4) & 0x000000000000000Full];
+        *(dst + 15) = hexDigits[value & 0x000000000000000Full];
         *(dst + 16) = 0;
 
         if (end) { *end = dst + 16; }
     }
 
     return dst;
+}
+
+uint8_t UTIL_xstoui8(const char* str)
+{
+    uint8_t r = 0;
+
+    if (str && UTIL_isHex(*str) && UTIL_isHex(*(str + 1)))
+    {
+        r = xctonv(*str);
+        ++str;
+        r <<= 4;
+        r |= xctonv(*str);
+    }
+    else { errno = EINVAL; }
+
+    return r;
+}
+
+uint16_t UTIL_xstoui16(const char* str)
+{
+    uint16_t r = 0;
+
+    if (str)
+    {
+        for (size_t i = 0; i < 4; ++i)
+        {
+            r <<= 4;
+            r |= xctonv(*(str + i));
+
+            if (!UTIL_isHex(*(str + i))) { errno = EINVAL; }
+        }
+    }
+    else { errno = EINVAL; }
+
+    return r;
+}
+
+uint32_t UTIL_xstoui32(const char* str)
+{
+    uint32_t r = 0;
+
+    if (str)
+    {
+        for (size_t i = 0; i < 8; ++i)
+        {
+            r <<= 4;
+            r |= xctonv(*(str + i));
+
+            if (!UTIL_isHex(*(str + i))) { errno = EINVAL; }
+        }
+    }
+    else { errno = EINVAL; }
+
+    return r;
+}
+
+uint64_t UTIL_xstoui64(const char* str)
+{
+    uint64_t r = 0;
+
+    if (str)
+    {
+        for (size_t i = 0; i < 16; ++i)
+        {
+            r <<= 4;
+            r |= xctonv(*(str + i));
+
+            if (!UTIL_isHex(*(str + i))) { errno = EINVAL; }
+        }
+    }
+    else { errno = EINVAL; }
+
+    return r;
 }
 
 char* UTIL_dataToHexStr(char* dst, const uint8_t* data, size_t count, char** end)
@@ -427,6 +508,26 @@ char* UTIL_dataToHexStrDelim(char* dst, const uint8_t* data, size_t count, char 
     return dst;
 }
 
-// https://en.cppreference.com/w/c/string/byte/strtol.html
-// https://en.cppreference.com/w/cpp/string/basic_string/stol
-// https://en.cppreference.com/w/c/error/errno_macros.html
+
+
+/**
+ * @brief Converts a hex character to it's nibbles value.
+ *
+ * No error checking, pure and thus potentially erroneous conversion.
+ *
+ */
+uint8_t xctonv(char ch)
+{
+    // make upper case
+    if ((ch >= 'a') && (ch <= 'f')) { ch -= 32; }
+
+    uint8_t r = 0;
+
+    while (r < 16)
+    {
+        if (hexDigits[r] == ch) { break; }
+        ++r;
+    }
+
+    return r;
+}
