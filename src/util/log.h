@@ -1,11 +1,17 @@
 /*
 author          Oliver Blaser
-date            08.05.2025
+date            27.10.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
 #ifndef IG_UTIL_LOG_H
 #define IG_UTIL_LOG_H
+
+
+
+#ifndef __ZEPHYR__ // =========================================================================================== ZEPHYR
+
+
 
 #include <stdio.h>
 
@@ -63,28 +69,30 @@ __pragma(message(__PRAGMA_LOC__ ": warning: \"CONFIG_LOG_LEVEL is not defined, d
 #if CONFIG_UTIL_LOG_NO_ANSIESC
 #else // CONFIG_UTIL_LOG_NO_ANSIESC
 
-#define LOG_CSI_EL "\033[2K" // erase line
+#define CSI_EL "\033[2K" // erase line
 
-#define LOG_SGR_RESET    "\033[0m"
+#define SGR_RESET       "\033[0m"
 
 // SGR foreground colors
-#define LOG_SGR_BLACK    "\033[30m"
-#define LOG_SGR_RED      "\033[31m"
-#define LOG_SGR_GREEN    "\033[32m"
-#define LOG_SGR_YELLOW   "\033[33m"
-#define LOG_SGR_BLUE     "\033[34m"
-#define LOG_SGR_MAGENTA  "\033[35m"
-#define LOG_SGR_CYAN     "\033[36m"
-#define LOG_SGR_WHITE    "\033[37m"
-#define LOG_SGR_DEFAULT  "\033[39m"
-#define LOG_SGR_BBLACK   "\033[90m"
-#define LOG_SGR_BRED     "\033[91m"
-#define LOG_SGR_BGREEN   "\033[92m"
-#define LOG_SGR_BYELLOW  "\033[93m"
-#define LOG_SGR_BBLUE    "\033[94m"
-#define LOG_SGR_BMAGENTA "\033[95m"
-#define LOG_SGR_BCYAN    "\033[96m"
-#define LOG_SGR_BWHITE   "\033[97m"
+#define SGR_FG_BLACK    "\033[30m"
+#define SGR_FG_RED      "\033[31m"
+#define SGR_FG_GREEN    "\033[32m"
+#define SGR_FG_YELLOW   "\033[33m"
+#define SGR_FG_BLUE     "\033[34m"
+#define SGR_FG_MAGENTA  "\033[35m"
+#define SGR_FG_CYAN     "\033[36m"
+#define SGR_FG_WHITE    "\033[37m"
+#define SGR_FG_DEFAULT  "\033[39m"
+#define SGR_FG_BBLACK   "\033[90m"
+#define SGR_FG_BRED     "\033[91m"
+#define SGR_FG_BGREEN   "\033[92m"
+#define SGR_FG_BYELLOW  "\033[93m"
+#define SGR_FG_BBLUE    "\033[94m"
+#define SGR_FG_BMAGENTA "\033[95m"
+#define SGR_FG_BCYAN    "\033[96m"
+#define SGR_FG_BWHITE   "\033[97m"
+
+// TODO ansi-esc-header
 
 #endif // CONFIG_UTIL_LOG_NO_ANSIESC
 
@@ -136,11 +144,131 @@ const char* LOG_tNow_local_iso8601();
 
 
 
+#else // __ZEPHYR__  ============================================================================================ ZEPHYR
+
+
+
+#include <zephyr/kernel.h>
+#include <zephyr/logging/log.h>
+
+
+
+#if CONFIG_LOG_BACKEND_SHOW_COLOR
+
+#define RTT_FG_BLACK    "\033[0;30m"
+#define RTT_FG_RED      "\033[0;31m"
+#define RTT_FG_GREEN    "\033[0;32m"
+#define RTT_FG_YELLOW   "\033[0;33m"
+#define RTT_FG_BLUE     "\033[0;34m"
+#define RTT_FG_MAGENTA  "\033[0;35m"
+#define RTT_FG_CYAN     "\033[0;36m"
+#define RTT_FG_WHITE    "\033[0;37m"
+// #define RTT_FG_DEFAULT "\033[39m" // ignored by RTT
+
+// using bold parameter for making foreground colors bright, works with RTT and PuTTY (RTT ignores bright colors 9x)
+#define RTT_FG_BBLACK   "\033[1;30m"
+#define RTT_FG_BRED     "\033[1;31m"
+#define RTT_FG_BGREEN   "\033[1;32m"
+#define RTT_FG_BYELLOW  "\033[1;33m"
+#define RTT_FG_BBLUE    "\033[1;34m"
+#define RTT_FG_BMAGENTA "\033[1;35m"
+#define RTT_FG_BCYAN    "\033[1;36m"
+#define RTT_FG_BWHITE   "\033[1;37m"
+
+#define ___RTT_PRINT_TEST()                                                                                                                 \
+    {                                                                                                                                       \
+        k_msleep(100);                                                                                                                      \
+        printk(SGR_RESET "    0;3x  1;3x  9x\r\n");                                                                                         \
+        for (int i = 30; i <= 37; ++i) { printk("x%i  \033[0;%im###   \033[1;%im###   \033[%im###\033[0m\r\n", (i - 30), i, i, (i + 60)); } \
+        printk(SGR_RESET "\r\n");                                                                                                           \
+        k_msleep(100);                                                                                                                      \
+    }
+
+
+
+#if CONFIG_UTIL_LOG_NO_ANSIESC
+#else // CONFIG_UTIL_LOG_NO_ANSIESC
+
+#define CSI_EL "\033[2K" // erase line
+
+#define SGR_RESET "\033[0m"
+
+#if CONFIG_USE_SEGGER_RTT
+
+#define SGR_FG_BLACK    RTT_FG_BLACK
+#define SGR_FG_RED      RTT_FG_RED
+#define SGR_FG_GREEN    RTT_FG_GREEN
+#define SGR_FG_YELLOW   RTT_FG_YELLOW
+#define SGR_FG_BLUE     RTT_FG_BLUE
+#define SGR_FG_MAGENTA  RTT_FG_MAGENTA
+#define SGR_FG_CYAN     RTT_FG_CYAN
+#define SGR_FG_WHITE    RTT_FG_WHITE
+#define SGR_FG_DEFAULT  SGR_RESET
+#define SGR_FG_BBLACK   RTT_FG_BBLACK
+#define SGR_FG_BRED     RTT_FG_BRED
+#define SGR_FG_BGREEN   RTT_FG_BGREEN
+#define SGR_FG_BYELLOW  RTT_FG_BYELLOW
+#define SGR_FG_BBLUE    RTT_FG_BBLUE
+#define SGR_FG_BMAGENTA RTT_FG_BMAGENTA
+#define SGR_FG_BCYAN    RTT_FG_BCYAN
+#define SGR_FG_BWHITE   RTT_FG_BWHITE
+
+#else // CONFIG_USE_SEGGER_RTT
+#error "not implemented"
+// TODO create ANSI ESC code bits header which can be used here and at "ansi-esc-header"
+#endif // CONFIG_USE_SEGGER_RTT
+
+#endif // CONFIG_UTIL_LOG_NO_ANSIESC
+
+
+
+#endif // CONFIG_LOG_BACKEND_SHOW_COLOR
+
+
+
+#define ___IS_LOG_LEVEL_ENABLED(_level) ((MODULE_LOG_LEVEL >= (_level)) && (CONFIG_LOG_MAX_LEVEL >= (_level)))
+
+#if ___IS_LOG_LEVEL_ENABLED(LOG_LEVEL_ERR)
+#define LOG_ERR_MSLEEP(_ms) k_msleep((_ms))
+#else
+#define LOG_ERR_MSLEEP(...) (void)0
+#endif
+
+#if ___IS_LOG_LEVEL_ENABLED(LOG_LEVEL_WRN)
+#define LOG_WRN_MSLEEP(_ms) k_msleep((_ms))
+#else
+#define LOG_WRN_MSLEEP(...) (void)0
+#endif
+
+#if ___IS_LOG_LEVEL_ENABLED(LOG_LEVEL_INF)
+#define LOG_INF_MSLEEP(_ms) k_msleep((_ms))
+#else
+#define LOG_INF_MSLEEP(...) (void)0
+#endif
+
+#if ___IS_LOG_LEVEL_ENABLED(LOG_LEVEL_DBG)
+#define LOG_DBG_MSLEEP(_ms) k_msleep((_ms))
+#else
+#define LOG_DBG_MSLEEP(...) (void)0
+#endif
+
+
+
+#endif // __ZEPHYR__ ============================================================================================ ZEPHYR
+
+
+
 #endif // IG_UTIL_LOG_H
 
 
 
-#ifdef UTIL_LOG_DEFINE_FUNCTIONS
+// #####################################################################################################################
+// #####################################################################################################################
+// #####################################################################################################################
+
+
+
+#if defined(UTIL_LOG_DEFINE_FUNCTIONS) && !defined(__ZEPHYR__)
 #undef UTIL_LOG_DEFINE_FUNCTIONS
 
 #include <inttypes.h>
