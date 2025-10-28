@@ -13,7 +13,7 @@ CXX_LINK = g++
 
 SRC_DIR = ../../../../src
 
-DEFINE_FLAGS = -DCONFIG_UTIL_LOG_MAX_LEVEL=0
+DEFINE_FLAGS = -DCONFIG_UTIL_LOG_MAX_LEVEL=4 -DCONFIG_UTIL_LOG_NO_ANSIESC=0
 INCLUDE_DIR_FLAGS = -I$(SRC_DIR)
 
 CFLAGS_COMMON = $(INCLUDE_DIR_FLAGS) $(DEFINE_FLAGS) -Wall -Werror=format -Werror=overflow -Werror=return-type -Wdouble-promotion -Werror=unused-parameter
@@ -23,7 +23,7 @@ CFLAGS_CXX = -Werror=reorder -Werror=switch #-Wno-psabi
 SRC_FILES_LIB = $(SRC_DIR)/util/ansi-esc.h $(SRC_DIR)/util/log.h $(SRC_DIR)/util/macros.h $(SRC_DIR)/util/sleep.c $(SRC_DIR)/util/sleep.h $(SRC_DIR)/util/string.c $(SRC_DIR)/util/string.h # $(SRC_DIR)/util/bits/ansi-esc.h $(SRC_DIR)/util/log_ansi-esc_disabled.h $(SRC_DIR)/util/log_ansi-esc_rtt.h $(SRC_DIR)/util/log_ansi-esc.h
 OBJS_LIB = sleep.o string.o
 OBJS = main.o $(OBJS_LIB)
-EXE = test_unit.bin
+EXE = test_system.bin
 
 FILES_TO_CLEAN = $(OBJS) $(EXE)
 
@@ -36,7 +36,7 @@ all: $(EXE)
 $(EXE): $(OBJS)
 	$(CXX) $(CFLAGS_COMMON) $(CFLAGS_CXX) -o $(EXE) $(OBJS)
 
-main.o: $(OBJS_LIB) $(SRC_FILES_LIB) ../../main.cpp ../../log.hpp ../../macros.hpp ../../sleep.hpp ../../string.hpp
+main.o: $(OBJS_LIB) $(SRC_FILES_LIB) ../../main.cpp
 	$(CXX) -c $(CFLAGS_COMMON) $(CFLAGS_CXX) ../../main.cpp
 
 sleep.o: $(SRC_DIR)/util/sleep.c $(SRC_DIR)/util/sleep.h
@@ -49,4 +49,5 @@ clean:
 	rm $(FILES_TO_CLEAN)
 
 run: $(EXE)
+	@echo "\033[32m########################################\033[39m"
 	./$(EXE)
