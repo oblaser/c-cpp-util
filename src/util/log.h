@@ -9,11 +9,7 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 
 #include "bits/log_ansi-esc.h"
 
-
-
-#ifndef __ZEPHYR__ // =========================================================================================== ZEPHYR
-
-
+#ifndef __ZEPHYR__
 
 #include <stdio.h>
 
@@ -120,38 +116,9 @@ const char* LOG_tNow_local_iso8601();
 
 
 
-#else // __ZEPHYR__  ============================================================================================ ZEPHYR
-
-#include <zephyr/kernel.h>
-#include <zephyr/logging/log.h>
-
-#define LOG_LEVEL_IS_ENABLED(_level) (((MODULE_LOG_LEVEL >= (_level)) || (LOG_MODULE_LEVEL >= (_level))) && (CONFIG_LOG_MAX_LEVEL >= (_level)))
-
-#if LOG_LEVEL_IS_ENABLED(LOG_LEVEL_ERR)
-#define LOG_ERR_MSLEEP(_ms) k_msleep((_ms))
-#else
-#define LOG_ERR_MSLEEP(...) (void)0
-#endif
-
-#if LOG_LEVEL_IS_ENABLED(LOG_LEVEL_WRN)
-#define LOG_WRN_MSLEEP(_ms) k_msleep((_ms))
-#else
-#define LOG_WRN_MSLEEP(...) (void)0
-#endif
-
-#if LOG_LEVEL_IS_ENABLED(LOG_LEVEL_INF)
-#define LOG_INF_MSLEEP(_ms) k_msleep((_ms))
-#else
-#define LOG_INF_MSLEEP(...) (void)0
-#endif
-
-#if LOG_LEVEL_IS_ENABLED(LOG_LEVEL_DBG)
-#define LOG_DBG_MSLEEP(_ms) k_msleep((_ms))
-#else
-#define LOG_DBG_MSLEEP(...) (void)0
-#endif
-
-#endif // __ZEPHYR__ ============================================================================================ ZEPHYR
+#else // __ZEPHYR__
+#include "bits/log_zephyr.h"
+#endif // __ZEPHYR__
 
 
 
