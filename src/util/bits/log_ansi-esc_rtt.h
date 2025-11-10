@@ -34,9 +34,9 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #define ___RTT_PRINT_TEST()                                                                                                                 \
     {                                                                                                                                       \
         k_msleep(100);                                                                                                                      \
-        printk(SGR_RESET "    0;3x  1;3x  9x\r\n");                                                                                         \
+        printk(RTT_SGR_RESET "    0;3x  1;3x  9x\r\n");                                                                                     \
         for (int i = 30; i <= 37; ++i) { printk("x%i  \033[0;%im###   \033[1;%im###   \033[%im###\033[0m\r\n", (i - 30), i, i, (i + 60)); } \
-        printk(SGR_RESET "\r\n");                                                                                                           \
+        printk(RTT_SGR_RESET "\r\n");                                                                                                       \
         k_msleep(100);                                                                                                                      \
     }
 
