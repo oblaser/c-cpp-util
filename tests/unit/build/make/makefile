@@ -16,7 +16,7 @@ SRC_DIR = ../../../../src
 DEFINE_FLAGS = -DCONFIG_UTIL_LOG_MAX_LEVEL=0
 INCLUDE_DIR_FLAGS = -I$(SRC_DIR)
 
-CFLAGS_COMMON = $(INCLUDE_DIR_FLAGS) $(DEFINE_FLAGS) -Wall -Werror=format -Werror=overflow -Werror=return-type -Wdouble-promotion -Werror=unused-parameter
+CFLAGS_COMMON = $(INCLUDE_DIR_FLAGS) $(DEFINE_FLAGS) --pedantic -Wall -Werror=format -Werror=overflow -Werror=return-type -Wdouble-promotion -Werror=unused-parameter
 CFLAGS_CC = -Werror=discarded-qualifiers -Werror=implicit -Werror=incompatible-pointer-types -Werror=int-conversion -Werror=pointer-sign
 CFLAGS_CXX = -Werror=reorder -Werror=switch #-Wno-psabi
 
@@ -49,4 +49,5 @@ clean:
 	rm $(FILES_TO_CLEAN)
 
 run: $(EXE)
+	@echo "\033[32m########################################\033[39m"
 	./$(EXE)
