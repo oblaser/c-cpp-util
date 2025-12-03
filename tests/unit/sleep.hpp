@@ -4,8 +4,8 @@ date            19.06.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
-#ifndef IG_TEST_UNIT_SLEEP_H
-#define IG_TEST_UNIT_SLEEP_H
+#ifndef IG_TEST_UNIT_SLEEP_HPP
+#define IG_TEST_UNIT_SLEEP_HPP
 
 #include <time.h>
 
@@ -110,4 +110,4 @@ TEST_CASE("sleep.h UTIL_ns_to_timespec")
 
 
 
-#endif // IG_TEST_UNIT_SLEEP_H
+#endif // IG_TEST_UNIT_SLEEP_HPP

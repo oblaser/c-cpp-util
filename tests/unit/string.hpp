@@ -4,8 +4,8 @@ date            21.06.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
-#ifndef IG_TEST_UNIT_STRING_H
-#define IG_TEST_UNIT_STRING_H
+#ifndef IG_TEST_UNIT_STRING_HPP
+#define IG_TEST_UNIT_STRING_HPP
 
 #include <ctype.h>
 #include <errno.h>
@@ -569,4 +569,4 @@ TEST_CASE("string.h data buffer to hex string")
 
 
 
-#endif // IG_TEST_UNIT_STRING_H
+#endif // IG_TEST_UNIT_STRING_HPP

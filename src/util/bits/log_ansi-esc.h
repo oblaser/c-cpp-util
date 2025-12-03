@@ -18,7 +18,9 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #endif
 
 #else // !CONFIG_UTIL_LOG_NO_ANSIESC
+
 #include "log_ansi-esc_disabled.h"
+
 #endif // !CONFIG_UTIL_LOG_NO_ANSIESC
 
 

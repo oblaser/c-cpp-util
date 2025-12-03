@@ -4,8 +4,8 @@ date            18.06.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
-#ifndef IG_TEST_UNIT_MACROS_H
-#define IG_TEST_UNIT_MACROS_H
+#ifndef IG_TEST_UNIT_MACROS_HPP
+#define IG_TEST_UNIT_MACROS_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -217,4 +217,4 @@ TEST_CASE("macros.h ROUNDF")
 
 
 
-#endif // IG_TEST_UNIT_MACROS_H
+#endif // IG_TEST_UNIT_MACROS_HPP

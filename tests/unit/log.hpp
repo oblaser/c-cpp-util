@@ -4,8 +4,8 @@ date            19.06.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
-#ifndef IG_TEST_UNIT_LOG_H
-#define IG_TEST_UNIT_LOG_H
+#ifndef IG_TEST_UNIT_LOG_HPP
+#define IG_TEST_UNIT_LOG_HPP
 
 #include <cstddef>
 #include <cstdio>
@@ -48,4 +48,4 @@ TEST_CASE("log.h ___LOG_t_local_iso8601")
 
 
 
-#endif // IG_TEST_UNIT_LOG_H
+#endif // IG_TEST_UNIT_LOG_HPP
