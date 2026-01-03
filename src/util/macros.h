@@ -19,13 +19,15 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 // declaration specifiers/attributes
 
 #if defined(_MSC_VER)
+#define ATTR_ALWAYS_INLINE __forceinline
 #if (_MSVC_LANG >= 201703L)
 #define ATTR_UNUSED [[maybe_unused]]
 #else // Cpp std version
 #define ATTR_UNUSED
 #endif // Cpp std version
 #else  // compiler
-#define ATTR_UNUSED __attribute__((unused))
+#define ATTR_ALWAYS_INLINE __attribute__((always_inline))
+#define ATTR_UNUSED        __attribute__((unused))
 #endif // compiler
 
 #ifdef __cplusplus
