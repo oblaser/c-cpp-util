@@ -1,16 +1,43 @@
 /*
 author          Oliver Blaser
-date            27.10.2025
-copyright       MIT - Copyright (c) 2025 Oliver Blaser
+date            01.02.2026
+copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
 #include <stdio.h>
 
 #include "util/ansi-esc.h"
+#include "util/macros.h"
 
 #define LOG_MODULE_LEVEL LOG_LEVEL_DBG
 #define LOG_MODULE_NAME  MAIN
 #include "util/log.h"
+
+
+
+#define LOG_TEST_FUNC()                                \
+    LOG_INF("UTIL__FUNCNAME__: %s", UTIL__FUNCNAME__); \
+    LOG_INF("UTIL__FUNCSIG__:  %s", UTIL__FUNCSIG__)
+
+
+
+namespace namsp {
+
+class Class
+{
+public:
+    void log() { LOG_TEST_FUNC(); }
+};
+
+void log() { LOG_TEST_FUNC(); }
+
+} // namespace namsp
+
+class Other
+{
+public:
+    void log() { LOG_TEST_FUNC(); }
+};
 
 
 
@@ -26,6 +53,22 @@ int main()
     LOG_DBG("debug     %s %i", __func__, __LINE__);
 
     printf("\n");
+
+
+
+    namsp::log();
+    printf("\n");
+
+    namsp::Class().log();
+    printf("\n");
+
+    Other().log();
+
+
+
+    printf("\n");
+
+
 
     return 0;
 }
