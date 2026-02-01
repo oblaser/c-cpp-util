@@ -4,8 +4,8 @@ date            01.03.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
-#ifndef IG_UTIL_SLEEP_H
-#define IG_UTIL_SLEEP_H
+#ifndef IG_UTIL_TIME_H
+#define IG_UTIL_TIME_H
 
 #include <stdint.h>
 #include <time.h>
@@ -41,4 +41,4 @@ void UTIL_ns_to_timespec(struct timespec* dst, uint64_t t_ns);
 }
 #endif
 
-#endif // IG_UTIL_SLEEP_H
+#endif // IG_UTIL_TIME_H

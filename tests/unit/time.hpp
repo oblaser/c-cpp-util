@@ -4,12 +4,12 @@ date            19.06.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
-#ifndef IG_TEST_UNIT_SLEEP_HPP
-#define IG_TEST_UNIT_SLEEP_HPP
+#ifndef IG_TEST_UNIT_TIME_HPP
+#define IG_TEST_UNIT_TIME_HPP
 
 #include <time.h>
 
-#include "util/sleep.h"
+#include "util/time.h"
 
 #include "catch2/catch.hpp"
 
@@ -21,7 +21,7 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 
 
 
-TEST_CASE("sleep.h UTIL_ms_to_timespec")
+TEST_CASE("time.h UTIL_ms_to_timespec")
 {
     struct timespec ts;
 
@@ -44,7 +44,7 @@ TEST_CASE("sleep.h UTIL_ms_to_timespec")
     TESTUTIL_CHECK_TIMESPEC(ts, 123456, 789000000);
 }
 
-TEST_CASE("sleep.h UTIL_us_to_timespec")
+TEST_CASE("time.h UTIL_us_to_timespec")
 {
     struct timespec ts;
 
@@ -73,7 +73,7 @@ TEST_CASE("sleep.h UTIL_us_to_timespec")
     TESTUTIL_CHECK_TIMESPEC(ts, 123, 456789000);
 }
 
-TEST_CASE("sleep.h UTIL_ns_to_timespec")
+TEST_CASE("time.h UTIL_ns_to_timespec")
 {
     struct timespec ts;
 
@@ -110,4 +110,4 @@ TEST_CASE("sleep.h UTIL_ns_to_timespec")
 
 
 
-#endif // IG_TEST_UNIT_SLEEP_HPP
+#endif // IG_TEST_UNIT_TIME_HPP

@@ -20,8 +20,8 @@ CFLAGS_COMMON = $(INCLUDE_DIR_FLAGS) $(DEFINE_FLAGS) --pedantic -Wall -Werror=fo
 CFLAGS_CC = -Werror=discarded-qualifiers -Werror=implicit -Werror=incompatible-pointer-types -Werror=int-conversion -Werror=pointer-sign
 CFLAGS_CXX = -Werror=reorder -Werror=switch #-Wno-psabi
 
-SRC_FILES_LIB = $(SRC_DIR)/util/ansi-esc.h $(SRC_DIR)/util/bool.h $(SRC_DIR)/util/log.h $(SRC_DIR)/util/macros.h $(SRC_DIR)/util/sleep.c $(SRC_DIR)/util/sleep.h $(SRC_DIR)/util/string.c $(SRC_DIR)/util/string.h # $(SRC_DIR)/util/bits/ansi-esc.h $(SRC_DIR)/util/log_ansi-esc_disabled.h $(SRC_DIR)/util/log_ansi-esc_enabled.h $(SRC_DIR)/util/log_ansi-esc_rtt.h $(SRC_DIR)/util/log_ansi-esc.h $(SRC_DIR)/util/log_zephyr.h
-OBJS_LIB = sleep.o string.o
+SRC_FILES_LIB = $(SRC_DIR)/util/ansi-esc.h $(SRC_DIR)/util/bool.h $(SRC_DIR)/util/log.h $(SRC_DIR)/util/macros.h $(SRC_DIR)/util/time.c $(SRC_DIR)/util/time.h $(SRC_DIR)/util/string.c $(SRC_DIR)/util/string.h # $(SRC_DIR)/util/bits/ansi-esc.h $(SRC_DIR)/util/log_ansi-esc_disabled.h $(SRC_DIR)/util/log_ansi-esc_enabled.h $(SRC_DIR)/util/log_ansi-esc_rtt.h $(SRC_DIR)/util/log_ansi-esc.h $(SRC_DIR)/util/log_zephyr.h
+OBJS_LIB = time.o string.o
 OBJS = main.o $(OBJS_LIB)
 EXE = test_system.bin
 
@@ -39,8 +39,8 @@ $(EXE): $(OBJS)
 main.o: $(OBJS_LIB) $(SRC_FILES_LIB) ../../main.cpp
 	$(CXX) -c $(CFLAGS_COMMON) $(CFLAGS_CXX) ../../main.cpp
 
-sleep.o: $(SRC_DIR)/util/sleep.c $(SRC_DIR)/util/sleep.h
-	$(CC) -c $(CFLAGS_COMMON) $(CFLAGS_CC) $(SRC_DIR)/util/sleep.c
+time.o: $(SRC_DIR)/util/time.c $(SRC_DIR)/util/time.h
+	$(CC) -c $(CFLAGS_COMMON) $(CFLAGS_CC) $(SRC_DIR)/util/time.c
 
 string.o: $(SRC_DIR)/util/string.c $(SRC_DIR)/util/string.h
 	$(CC) -c $(CFLAGS_COMMON) $(CFLAGS_CC) $(SRC_DIR)/util/string.c
