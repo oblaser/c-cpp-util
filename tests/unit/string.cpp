@@ -4,13 +4,11 @@ date            21.06.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
-#ifndef IG_TEST_UNIT_STRING_HPP
-#define IG_TEST_UNIT_STRING_HPP
-
 #include <ctype.h>
 #include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "util/macros.h"
 #include "util/string.h"
@@ -566,7 +564,3 @@ TEST_CASE("string.h data buffer to hex string")
     CHECK(strcmp(UTIL_dataToHexStrDelim(buffer, data, 0, '$', &end), "") == 0);
     CHECK(end == buffer + 0);
 }
-
-
-
-#endif // IG_TEST_UNIT_STRING_HPP

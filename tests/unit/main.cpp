@@ -28,4 +28,3 @@ TEST_CASE("C/C++ Util")
 #include "log.hpp"
 #include "macros.hpp"
 #include "sleep.hpp"
-#include "string.hpp"
