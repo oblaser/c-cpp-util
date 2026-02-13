@@ -25,8 +25,8 @@ typedef struct
 
 typedef struct
 {
-    void* buffer;      ///< _internal use_
-    size_t bufferSize; ///< _internal use_
+    uint8_t* stack;   ///< _internal use_
+    size_t stackSize; ///< _internal use_
 
     size_t prCount;    ///< Number of pre-release identifiers
     size_t buildCount; ///< Number of build identifiers
@@ -56,6 +56,10 @@ void UTIL_semver_clear(UTIL_semver_t* v);
 
 /**
  * @brief Sets pre-release and build identifiers.
+ *
+ * On error, `*v` remains unchanged.
+ *
+ * If `UTIL_semver_t::buffer` is too small, `errno` is set to `ENOMEM` and `-1` is returned.
  *
  * @param [out] v
  * @param pr Pre-release identifier list

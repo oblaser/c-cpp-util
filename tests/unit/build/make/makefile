@@ -55,7 +55,7 @@ time.o: $(SRC_DIR)/util/time.c $(SRC_DIR)/util/time.h
 string.o: $(SRC_DIR)/util/string.c $(SRC_DIR)/util/string.h
 	$(CC) -c $(CFLAGS_COMMON) $(CFLAGS_CC) $(SRC_DIR)/util/string.c
 
-version.o: $(SRC_DIR)/util/version.c $(SRC_DIR)/util/version.h
+version.o: string.o $(SRC_DIR)/util/version.c $(SRC_DIR)/util/version.h
 	$(CC) -c $(CFLAGS_COMMON) $(CFLAGS_CC) $(SRC_DIR)/util/version.c
 
 clean:
