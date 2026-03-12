@@ -25,6 +25,13 @@ typedef struct
 
 typedef struct
 {
+    int32_t major;
+    int32_t minor;
+    int32_t patch;
+} UTIL_mmpver_t;
+
+typedef struct
+{
     uint8_t* stack;   ///< _internal use_
     size_t stackSize; ///< _internal use_
 
