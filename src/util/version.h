@@ -15,6 +15,37 @@ copyright       MIT - Copyright (c) 2026 Oliver Blaser
 extern "C" {
 #endif
 
+/*! \addtogroup grp_stringLib
+ * @{
+ */
+
+
+
+//! \name Format Constants
+/// @{
+
+/**
+ * User still needs to `#include <inttypes.h>`
+ */
+#define PRImmver PRIi32 ".%" PRIi32
+
+/**
+ * @param _v Pointer to an `UTIL_mmver_t` object
+ */
+#define ARGmmver(_v) ((_v)->major), ((_v)->minor)
+
+/**
+ * User still needs to `#include <inttypes.h>`
+ */
+#define PRImmpver PRIi32 ".%" PRIi32 ".%" PRIi32
+
+/**
+ * @param _v Pointer to an `UTIL_mmpver_t` object
+ */
+#define ARGmmpver(_v) ((_v)->major), ((_v)->minor), ((_v)->patch)
+
+/// @}
+
 
 
 typedef struct
@@ -106,6 +137,8 @@ char* UTIL_semvertos(char* dst, size_t size, const UTIL_semver_t* v, char** end)
 int UTIL_stosemver(UTIL_semver_t* v, const char* str);
 
 
+
+/*! @} */
 
 #ifdef __cplusplus
 }

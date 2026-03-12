@@ -4,8 +4,10 @@ date            12.02.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
+#include <cinttypes>
 #include <cstddef>
 #include <cstdint>
+#include <cstdio>
 #include <cstring>
 #include <string>
 
@@ -25,6 +27,24 @@ extern void hexDump(const uint8_t*, size_t);
 #endif
 
 
+
+TEST_CASE("version.h format constants")
+{
+    UTIL_mmver_t mm;
+    UTIL_mmpver_t mmp;
+    char buffer[100];
+
+    mm.major = 159;
+    mm.minor = 753;
+    sprintf(buffer, "%" PRImmver, ARGmmver(&mm));
+    CHECK(buffer == std::string("159.753"));
+
+    mmp.major = 123;
+    mmp.minor = 5;
+    mmp.patch = 9;
+    sprintf(buffer, "%" PRImmpver, ARGmmpver(&mmp));
+    CHECK(buffer == std::string("123.5.9"));
+}
 
 TEST_CASE("version.h UTIL_semver_clear()")
 {
