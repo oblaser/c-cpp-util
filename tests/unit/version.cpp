@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            12.02.2026
+date            17.03.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -45,6 +45,58 @@ TEST_CASE("version.h format constants")
     sprintf(buffer, "%" PRImmpver, ARGmmpver(&mmp));
     CHECK(buffer == std::string("123.5.9"));
 }
+
+
+
+TEST_CASE("version.h UTIL_mmvercmp()")
+{
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wc++20-extensions"
+#endif
+
+    const UTIL_mmver_t v00 = { .major = 0, .minor = 0 };
+    const UTIL_mmver_t v01 = { .major = 0, .minor = 1 };
+    const UTIL_mmver_t v10 = { .major = 1, .minor = 0 };
+    const UTIL_mmver_t v11 = { .major = 1, .minor = 1 };
+    const UTIL_mmver_t v11_2 = { .major = 1, .minor = 1 };
+
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
+
+    CHECK_FALSE(UTIL_mmvercmp(&v11, &v00) == 0);
+    CHECK_FALSE(UTIL_mmvercmp(&v11, &v01) == 0);
+    CHECK_FALSE(UTIL_mmvercmp(&v11, &v10) == 0);
+    CHECK(UTIL_mmvercmp(&v11, &v11_2) == 0);
+
+    CHECK(UTIL_mmvercmp(&v11, &v00) != 0);
+    CHECK(UTIL_mmvercmp(&v11, &v01) != 0);
+    CHECK(UTIL_mmvercmp(&v11, &v10) != 0);
+    CHECK_FALSE(UTIL_mmvercmp(&v11, &v11_2) != 0);
+
+    CHECK_FALSE(UTIL_mmvercmp(&v11, &v00) < 0);
+    CHECK_FALSE(UTIL_mmvercmp(&v11, &v01) < 0);
+    CHECK_FALSE(UTIL_mmvercmp(&v11, &v10) < 0);
+    CHECK_FALSE(UTIL_mmvercmp(&v11, &v11_2) < 0);
+
+    CHECK_FALSE(UTIL_mmvercmp(&v11, &v00) <= 0);
+    CHECK_FALSE(UTIL_mmvercmp(&v11, &v01) <= 0);
+    CHECK_FALSE(UTIL_mmvercmp(&v11, &v10) <= 0);
+    CHECK(UTIL_mmvercmp(&v11, &v11_2) <= 0);
+
+    CHECK(UTIL_mmvercmp(&v11, &v00) > 0);
+    CHECK(UTIL_mmvercmp(&v11, &v01) > 0);
+    CHECK(UTIL_mmvercmp(&v11, &v10) > 0);
+    CHECK_FALSE(UTIL_mmvercmp(&v11, &v11_2) > 0);
+
+    CHECK(UTIL_mmvercmp(&v11, &v00) >= 0);
+    CHECK(UTIL_mmvercmp(&v11, &v01) >= 0);
+    CHECK(UTIL_mmvercmp(&v11, &v10) >= 0);
+    CHECK(UTIL_mmvercmp(&v11, &v11_2) >= 0);
+}
+
+
 
 TEST_CASE("version.h UTIL_semver_clear()")
 {

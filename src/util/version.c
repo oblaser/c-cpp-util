@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            12.02.2026
+date            17.03.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -16,6 +16,24 @@ copyright       MIT - Copyright (c) 2026 Oliver Blaser
 static const char identDelimiter = '.'; // identifier delimiter
 static const char prDelimiter = '-';
 static const char buildDelimiter = '+';
+
+
+
+int UTIL_mmvercmp(const UTIL_mmver_t* a, const UTIL_mmver_t* b)
+{
+    int r = 0;
+
+    if (a->major < b->major) { r = -1; }
+    else if (a->major == b->major)
+    {
+        if (a->minor < b->minor) { r = -1; }
+        else if (a->minor == b->minor) { r = 0; }
+        else { r = 1; }
+    }
+    else { r = 1; }
+
+    return r;
+}
 
 
 
