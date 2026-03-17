@@ -19,6 +19,12 @@ static const char buildDelimiter = '+';
 
 
 
+void UTIL_mmver_clear(UTIL_mmver_t* v)
+{
+    v->major = 0;
+    v->minor = 0;
+}
+
 int UTIL_mmvercmp(const UTIL_mmver_t* a, const UTIL_mmver_t* b)
 {
     int r = 0;
@@ -33,6 +39,15 @@ int UTIL_mmvercmp(const UTIL_mmver_t* a, const UTIL_mmver_t* b)
     else { r = 1; }
 
     return r;
+}
+
+
+
+void UTIL_mmpver_clear(UTIL_mmpver_t* v)
+{
+    v->major = 0;
+    v->minor = 0;
+    v->patch = 0;
 }
 
 

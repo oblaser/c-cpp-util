@@ -15,7 +15,7 @@ copyright       MIT - Copyright (c) 2026 Oliver Blaser
 extern "C" {
 #endif
 
-/*! \addtogroup grp_stringLib
+/*! \addtogroup grp_versionLib
  * @{
  */
 
@@ -80,6 +80,13 @@ void UTIL_mmver_clear(UTIL_mmver_t* v);
 int UTIL_mmvercmp(const UTIL_mmver_t* a, const UTIL_mmver_t* b);
 char* UTIL_mmvertos(char* dst, size_t size, const UTIL_mmver_t* v, char** end);
 int UTIL_stommver(UTIL_mmver_t* v, const char* str);
+
+
+
+void UTIL_mmpver_clear(UTIL_mmpver_t* v);
+int UTIL_mmpvercmp(const UTIL_mmpver_t* a, const UTIL_mmpver_t* b);
+char* UTIL_mmpvertos(char* dst, size_t size, const UTIL_mmpver_t* v, char** end);
+int UTIL_stommpver(UTIL_mmpver_t* v, const char* str);
 
 
 

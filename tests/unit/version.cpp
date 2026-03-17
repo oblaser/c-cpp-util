@@ -48,6 +48,20 @@ TEST_CASE("version.h format constants")
 
 
 
+TEST_CASE("version.h UTIL_mmver_clear()")
+{
+    UTIL_mmver_t ___v;
+    UTIL_mmver_t* v = &___v;
+
+    v->major = 12;
+    v->minor = 34;
+
+    UTIL_mmver_clear(v);
+
+    CHECK(v->major == 0);
+    CHECK(v->minor == 0);
+}
+
 TEST_CASE("version.h UTIL_mmvercmp()")
 {
 #ifdef __GNUC__
@@ -98,14 +112,32 @@ TEST_CASE("version.h UTIL_mmvercmp()")
 
 
 
+TEST_CASE("version.h UTIL_mmpver_clear()")
+{
+    UTIL_mmpver_t ___v;
+    UTIL_mmpver_t* v = &___v;
+
+    v->major = 12;
+    v->minor = 34;
+    v->patch = 56;
+
+    UTIL_mmpver_clear(v);
+
+    CHECK(v->major == 0);
+    CHECK(v->minor == 0);
+    CHECK(v->patch == 0);
+}
+
+
+
 TEST_CASE("version.h UTIL_semver_clear()")
 {
     UTIL_semver_t ___v;
     UTIL_semver_t* v = &___v;
 
-    v->major = 1;
-    v->minor = 2;
-    v->patch = 3;
+    v->major = 12;
+    v->minor = 34;
+    v->patch = 56;
     v->prCount = 4;
     v->buildCount = 5;
 
