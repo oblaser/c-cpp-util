@@ -1,11 +1,8 @@
 /*
 author          Oliver Blaser
-date            19.06.2025
-copyright       MIT - Copyright (c) 2025 Oliver Blaser
+date            19.03.2026
+copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
-
-#ifndef IG_TEST_UNIT_TIME_HPP
-#define IG_TEST_UNIT_TIME_HPP
 
 #include <time.h>
 
@@ -20,6 +17,24 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
     CHECK((_timespec).tv_nsec == (_ns))
 
 
+
+TEST_CASE("time.h constant expressions")
+{
+    CHECK(UTIL_SECOND_s == 1);
+    CHECK(UTIL_MINUTE_s == 60);
+    CHECK(UTIL_HOUR_s == 3600);
+    CHECK(UTIL_DAY_s == 86400);
+
+    CHECK(UTIL_SECOND_ms == 1000);
+    CHECK(UTIL_MINUTE_ms == 60000);
+    CHECK(UTIL_HOUR_ms == 3600000);
+    CHECK(UTIL_DAY_ms == 86400000);
+
+    CHECK(UTIL_SECOND_us == 1000000);
+    CHECK(UTIL_MINUTE_us == 60000000);
+    CHECK(UTIL_HOUR_us == 3600000000ll);
+    CHECK(UTIL_DAY_us == 86400000000ll);
+}
 
 TEST_CASE("time.h UTIL_ms_to_timespec")
 {
@@ -108,6 +123,10 @@ TEST_CASE("time.h UTIL_ns_to_timespec")
     TESTUTIL_CHECK_TIMESPEC(ts, 1234, 567890123);
 }
 
-
-
-#endif // IG_TEST_UNIT_TIME_HPP
+#if ___UTIL_PLAT_WIN // && (___UTIL_STDC >= ___UTIL_STDC_11) test has to be done
+TEST_CASE("time.h timspec FILETIME conversion")
+{
+#error "TODO implement tests"
+    // https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime
+}
+#endif

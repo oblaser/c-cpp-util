@@ -1,8 +1,15 @@
 
 /**
  * @defgroup grp_stringLib Strings Library
+ * `#include "util/string.h"`
+ */
+
+/**
+ * @defgroup grp_timeLib Time Library
+ * `#include "util/time.h"`
  */
 
 /**
  * @defgroup grp_versionLib Versions Library
+ * `#include "util/version.h"`
  */

@@ -1,6 +1,6 @@
 
 # author        Oliver Blaser
-# date          12.02.2026
+# date          19.03.2026
 # copyright     MIT - Copyright (c) 2026 Oliver Blaser
 
 
@@ -22,7 +22,7 @@ CFLAGS_CXX = $(CFLAGS_COMMON) -Werror=reorder -Werror=switch #-Wno-psabi -Wusele
 
 SRC_FILES_LIB = $(SRC_DIR)/util/ansi-esc.h $(SRC_DIR)/util/bool.h $(SRC_DIR)/util/log.h $(SRC_DIR)/util/macros.h $(SRC_DIR)/util/time.c $(SRC_DIR)/util/time.h $(SRC_DIR)/util/string.c $(SRC_DIR)/util/string.h $(SRC_DIR)/util/version.c $(SRC_DIR)/util/version.h # $(SRC_DIR)/util/bits/ansi-esc.h $(SRC_DIR)/util/log_ansi-esc_disabled.h $(SRC_DIR)/util/log_ansi-esc_enabled.h $(SRC_DIR)/util/log_ansi-esc_rtt.h $(SRC_DIR)/util/log_ansi-esc.h $(SRC_DIR)/util/log_zephyr.h
 OBJS_LIB = time.o string.o version.o
-OBJS_TEST = test-bool-c.o test-string.o test-version.o
+OBJS_TEST = test-bool-c.o test-string.o test-time.o test-version.o
 OBJS = main.o $(OBJS_TEST) $(OBJS_LIB)
 EXE = test_unit.bin
 
@@ -37,7 +37,7 @@ all: $(EXE)
 $(EXE): $(OBJS)
 	$(CXX) $(CFLAGS_CXX) -o $(EXE) $(OBJS)
 
-main.o: $(OBJS_LIB) $(OBJS_TEST) $(SRC_FILES_LIB) ../../main.cpp ../../bool.hpp $(SRC_DIR)/util/bool.h ../../log.hpp $(SRC_DIR)/util/log.h ../../macros.hpp $(SRC_DIR)/util/macros.h ../../time.hpp $(SRC_DIR)/util/time.h
+main.o: $(OBJS_LIB) $(OBJS_TEST) $(SRC_FILES_LIB) ../../main.cpp ../../bool.hpp $(SRC_DIR)/util/bool.h ../../log.hpp $(SRC_DIR)/util/log.h ../../macros.hpp $(SRC_DIR)/util/macros.h $(SRC_DIR)/util/time.h
 	$(CXX) -c $(CFLAGS_CXX) ../../main.cpp
 
 test-bool-c.o: ../../bool.c ../../bool.h $(SRC_DIR)/util/bool.h
@@ -45,6 +45,9 @@ test-bool-c.o: ../../bool.c ../../bool.h $(SRC_DIR)/util/bool.h
 
 test-string.o: string.o ../../string.cpp $(SRC_DIR)/util/macros.h
 	$(CXX) -o test-string.o -c $(CFLAGS_CXX) ../../string.cpp
+
+test-time.o: time.o ../../time.cpp
+	$(CXX) -o test-time.o -c $(CFLAGS_CXX) ../../time.cpp
 
 test-version.o: version.o ../../version.cpp
 	$(CXX) -o test-version.o -c $(CFLAGS_CXX) ../../version.cpp
