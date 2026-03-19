@@ -1,15 +1,21 @@
 /*
 author          Oliver Blaser
-date            17.03.2026
+date            19.03.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
 #include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
+#if CONFIG_UTIL_VERSION_USE_STDIO
+#include <stdio.h>
+#include <string.h>
+#endif
 
-#include "../util/string.h"
 #include "version.h"
+#if !CONFIG_UTIL_VERSION_USE_STDIO
+#include "../util/string.h"
+#endif
 
 
 
@@ -137,18 +143,24 @@ int UTIL_semver_setPrBuild(UTIL_semver_t* v, const char* const * pr, size_t prCo
     return 0;
 }
 
-// TODO rm these two headers
-#include <stdio.h>
-#include <string.h>
 char* UTIL_semvertos(char* dst, size_t size, const UTIL_semver_t* v, char** end)
 {
 #warning "TODO size checks, currently assuming sufficent destination buffer size"
     (void)size;
     (void)end;
 
-    // TODO decimal string conversion from util/string.h instead of <string.h>
+#if CONFIG_UTIL_VERSION_USE_STDIO
     sprintf(dst, "%i.%i.%i", v->major, v->minor, v->patch);
     char* p = dst + strlen(dst);
+#else
+    char* p = dst;
+    UTIL_i32tos(p, v->major, &p);
+    *p++ = '.';
+    UTIL_i32tos(p, v->minor, &p);
+    *p++ = '.';
+    UTIL_i32tos(p, v->patch, &p);
+#endif
+
     size_t cnt = 0;
 
     for (size_t i = 0; i < v->prCount; ++i)
