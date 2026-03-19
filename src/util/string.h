@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            30.08.2025
-copyright       MIT - Copyright (c) 2025 Oliver Blaser
+date            19.02.2026
+copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
 #ifndef IG_UTIL_STRING_H
@@ -193,15 +193,25 @@ int UTIL_isHexStr(const char* str, size_t count);
 //!
 /// @{
 
-char* UTIL_i8tos(char* dst, int8_t value, char** end);
-char* UTIL_i16tos(char* dst, int16_t value, char** end);
 char* UTIL_i32tos(char* dst, int32_t value, char** end);
 char* UTIL_i64tos(char* dst, int64_t value, char** end);
+#if CONFIG_UTIL_STRING_8BIT_ARCH
+char* UTIL_i8tos(char* dst, int8_t value, char** end);
+char* UTIL_i16tos(char* dst, int16_t value, char** end);
+#else
+static inline char* UTIL_i8tos(char* dst, int8_t value, char** end) { return UTIL_i32tos(dst, (int32_t)value, end); }
+static inline char* UTIL_i16tos(char* dst, int16_t value, char** end) { return UTIL_i32tos(dst, (int32_t)value, end); }
+#endif
 
-char* UTIL_ui8tos(char* dst, uint8_t value, char** end);
-char* UTIL_ui16tos(char* dst, uint16_t value, char** end);
 char* UTIL_ui32tos(char* dst, uint32_t value, char** end);
 char* UTIL_ui64tos(char* dst, uint64_t value, char** end);
+#if CONFIG_UTIL_STRING_8BIT_ARCH
+char* UTIL_ui8tos(char* dst, uint8_t value, char** end);
+char* UTIL_ui16tos(char* dst, uint16_t value, char** end);
+#else
+static inline char* UTIL_ui8tos(char* dst, uint8_t value, char** end) { return UTIL_ui32tos(dst, (uint32_t)value, end); }
+static inline char* UTIL_ui16tos(char* dst, uint16_t value, char** end) { return UTIL_ui32tos(dst, (uint32_t)value, end); }
+#endif
 
 int8_t UTIL_stoi8(const char* str, char** end);
 int16_t UTIL_stoi16(const char* str, char** end);

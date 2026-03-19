@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            30.08.2025
-copyright       MIT - Copyright (c) 2025 Oliver Blaser
+date            19.02.2026
+copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
 #include <errno.h>
@@ -310,6 +310,125 @@ int UTIL_isHexStr(const char* str, size_t count)
 
     return r;
 }
+
+#define UTIL_iXtos(_bits)                                                 \
+    if (dst)                                                              \
+    {                                                                     \
+        if (value < 0)                                                    \
+        {                                                                 \
+            *(dst + 0) = '-';                                             \
+            UTIL_ui##_bits##tos(dst + 1, (uint##_bits##_t)(-value), end); \
+        }                                                                 \
+        else { UTIL_ui##_bits##tos(dst, (uint##_bits##_t)value, end); }   \
+    }                                                                     \
+    return dst
+
+char* UTIL_i32tos(char* dst, int32_t value, char** end) { UTIL_iXtos(32); }
+char* UTIL_i64tos(char* dst, int64_t value, char** end) { UTIL_iXtos(64); }
+#if CONFIG_UTIL_STRING_8BIT_ARCH
+char* UTIL_i8tos(char* dst, int8_t value, char** end) { UTIL_iXtos(8); }
+char* UTIL_i16tos(char* dst, int16_t value, char** end) { UTIL_iXtos(16); }
+#endif
+
+#undef UTIL_iXtos
+
+char* UTIL_ui32tos(char* dst, uint32_t value, char** end)
+{
+    if (dst)
+    {
+        char* p = dst;
+
+        if (value >= 1000000000) { *p++ = (char)(0x30 + (value / 1000000000)); }
+        if (value >= 100000000) { *p++ = (char)(0x30 + ((value / 100000000) % 10)); }
+        if (value >= 10000000) { *p++ = (char)(0x30 + ((value / 10000000) % 10)); }
+        if (value >= 1000000) { *p++ = (char)(0x30 + ((value / 1000000) % 10)); }
+        if (value >= 100000) { *p++ = (char)(0x30 + ((value / 100000) % 10)); }
+        if (value >= 10000) { *p++ = (char)(0x30 + ((value / 10000) % 10)); }
+        if (value >= 1000) { *p++ = (char)(0x30 + ((value / 1000) % 10)); }
+        if (value >= 100) { *p++ = (char)(0x30 + ((value / 100) % 10)); }
+        if (value >= 10) { *p++ = (char)(0x30 + ((value / 10) % 10)); }
+        *p++ = (char)(0x30 + (value % 10));
+
+        *p = 0;
+        if (end) { *end = p; }
+    }
+
+    return dst;
+}
+
+char* UTIL_ui64tos(char* dst, uint64_t value, char** end)
+{
+    if (dst)
+    {
+        char* p = dst;
+
+        if (value >= 10000000000000000000ull) { *p++ = (char)(0x30 + (value / 10000000000000000000ull)); }
+        if (value >= 1000000000000000000ull) { *p++ = (char)(0x30 + ((value / 1000000000000000000ull) % 10)); }
+        if (value >= 100000000000000000ull) { *p++ = (char)(0x30 + ((value / 100000000000000000ull) % 10)); }
+        if (value >= 10000000000000000ull) { *p++ = (char)(0x30 + ((value / 10000000000000000ull) % 10)); }
+        if (value >= 1000000000000000ull) { *p++ = (char)(0x30 + ((value / 1000000000000000ull) % 10)); }
+        if (value >= 100000000000000ull) { *p++ = (char)(0x30 + ((value / 100000000000000ull) % 10)); }
+        if (value >= 10000000000000ull) { *p++ = (char)(0x30 + ((value / 10000000000000ull) % 10)); }
+        if (value >= 1000000000000ull) { *p++ = (char)(0x30 + ((value / 1000000000000ull) % 10)); }
+        if (value >= 100000000000ull) { *p++ = (char)(0x30 + ((value / 100000000000ull) % 10)); }
+        if (value >= 10000000000ull) { *p++ = (char)(0x30 + ((value / 10000000000ull) % 10)); }
+        if (value >= 1000000000ull) { *p++ = (char)(0x30 + ((value / 1000000000ull) % 10)); }
+        if (value >= 100000000ull) { *p++ = (char)(0x30 + ((value / 100000000ull) % 10)); }
+        if (value >= 10000000ull) { *p++ = (char)(0x30 + ((value / 10000000ull) % 10)); }
+        if (value >= 1000000ull) { *p++ = (char)(0x30 + ((value / 1000000ull) % 10)); }
+        if (value >= 100000ull) { *p++ = (char)(0x30 + ((value / 100000ull) % 10)); }
+        if (value >= 10000ull) { *p++ = (char)(0x30 + ((value / 10000ull) % 10)); }
+        if (value >= 1000ull) { *p++ = (char)(0x30 + ((value / 1000ull) % 10)); }
+        if (value >= 100ull) { *p++ = (char)(0x30 + ((value / 100ull) % 10)); }
+        if (value >= 10ull) { *p++ = (char)(0x30 + ((value / 10ull) % 10)); }
+        *p++ = (char)(0x30 + (value % 10));
+
+        *p = 0;
+        if (end) { *end = p; }
+    }
+
+    return dst;
+}
+
+#if CONFIG_UTIL_STRING_8BIT_ARCH
+
+char* UTIL_ui8tos(char* dst, uint8_t value, char** end)
+{
+    if (dst)
+    {
+        char* p = dst;
+
+        if (value >= 100) { *p++ = (char)(0x30 + (value / 100)); }
+        if (value >= 10) { *p++ = (char)(0x30 + ((value / 10) % 10)); }
+        *p++ = (char)(0x30 + (value % 10));
+
+        *p = 0;
+        if (end) { *end = p; }
+    }
+
+    return dst;
+}
+
+char* UTIL_ui16tos(char* dst, uint16_t value, char** end)
+{
+    if (dst)
+    {
+        char* p = dst;
+
+        if (value >= 10000) { *p++ = (char)(0x30 + (value / 10000)); }
+        if (value >= 1000) { *p++ = (char)(0x30 + ((value / 1000) % 10)); }
+        if (value >= 100) { *p++ = (char)(0x30 + ((value / 100) % 10)); }
+        if (value >= 10) { *p++ = (char)(0x30 + ((value / 10) % 10)); }
+        *p++ = (char)(0x30 + (value % 10));
+
+        *p = 0;
+        if (end) { *end = p; }
+    }
+
+    return dst;
+}
+
+#endif // CONFIG_UTIL_STRING_8BIT_ARCH
 
 // https://en.cppreference.com/w/c/string/byte/strtol.html
 // https://en.cppreference.com/w/cpp/string/basic_string/stol

@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            21.06.2025
-copyright       MIT - Copyright (c) 2025 Oliver Blaser
+date            19.02.2026
+copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
 #include <ctype.h>
@@ -404,9 +404,462 @@ TEST_CASE("string.h String Classification hex")
     CHECK(UTIL_isHexStr(substrTest + 1, 0) == 0);
 }
 
-TEST_CASE("string.h signed integer to string") {}
+TEST_CASE("string.h integer to string")
+{
+    char* end;
+    char buffer[21];
 
-TEST_CASE("string.h unsigned integer to string") {}
+    auto reset = [&]() {
+        end = NULL;
+        for (size_t i = 0; i < sizeof(buffer); ++i) { buffer[i] = '#'; }
+        buffer[sizeof(buffer) - 1] = 0;
+    };
+
+#if 0
+    const test_case_t tests[] = {
+        // { .value = 1, .i8 = "1", .i16 = "1", .i32 = "1", .i64 = "1", .ui8 = "1", .ui16 = "1", .ui32 = "1", .ui64 = "1" },
+        // { .value = 2, .i8 = "2", .i16 = "2", .i32 = "2", .i64 = "2", .ui8 = "2", .ui16 = "2", .ui32 = "2", .ui64 = "2" },
+        // { .value = 123, .i8 = "123", .i16 = "123", .i32 = "123", .i64 = "123", .ui8 = "123", .ui16 = "123", .ui32 = "123", .ui64 = "123" },
+        // { .value = -123, .i8 = "-123", .i16 = "-123", .i32 = "-123", .i64 = "-123", .ui8 = "133", .ui16 = "133", .ui32 = "133", .ui64 = "133" },
+        // { .value = 1234, .i8 = "210", .i16 = "1234", .i32 = "1234", .i64 = "1234", .ui8 = "210", .ui16 = "1234", .ui32 = "1234", .ui64 = "1234" },
+    };
+#endif
+
+
+
+#undef SiXtos_value
+#define SiXtos_value (0)
+    {
+        reset();
+        CHECK(strcmp(UTIL_i8tos(buffer, SiXtos_value, &end), "0") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_i16tos(buffer, SiXtos_value, &end), "0") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_i32tos(buffer, SiXtos_value, &end), "0") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_i64tos(buffer, SiXtos_value, &end), "0") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_ui8tos(buffer, SiXtos_value, &end), "0") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_ui16tos(buffer, SiXtos_value, &end), "0") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_ui32tos(buffer, SiXtos_value, &end), "0") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_ui64tos(buffer, SiXtos_value, &end), "0") == 0);
+        CHECK(end == (buffer + 1));
+    }
+#undef SiXtos_value
+
+
+
+#undef SiXtos_value
+#define SiXtos_value (-2)
+    {
+        reset();
+        CHECK(strcmp(UTIL_i8tos(buffer, SiXtos_value, &end), "-2") == 0);
+        CHECK(end == (buffer + 2));
+
+        reset();
+        CHECK(strcmp(UTIL_i16tos(buffer, SiXtos_value, &end), "-2") == 0);
+        CHECK(end == (buffer + 2));
+
+        reset();
+        CHECK(strcmp(UTIL_i32tos(buffer, SiXtos_value, &end), "-2") == 0);
+        CHECK(end == (buffer + 2));
+
+        reset();
+        CHECK(strcmp(UTIL_i64tos(buffer, SiXtos_value, &end), "-2") == 0);
+        CHECK(end == (buffer + 2));
+
+        reset();
+        CHECK(strcmp(UTIL_ui8tos(buffer, SiXtos_value, &end), "254") == 0);
+        CHECK(end == (buffer + 3));
+
+        reset();
+        CHECK(strcmp(UTIL_ui16tos(buffer, SiXtos_value, &end), "65534") == 0);
+        CHECK(end == (buffer + 5));
+
+        reset();
+        CHECK(strcmp(UTIL_ui32tos(buffer, SiXtos_value, &end), "4294967294") == 0);
+        CHECK(end == (buffer + 10));
+
+        reset();
+        CHECK(strcmp(UTIL_ui64tos(buffer, SiXtos_value, &end), "18446744073709551614") == 0);
+        CHECK(end == (buffer + 20));
+    }
+#undef SiXtos_value
+
+
+
+#undef SiXtos_value
+#define SiXtos_value (-1)
+    {
+        reset();
+        CHECK(strcmp(UTIL_i8tos(buffer, SiXtos_value, &end), "-1") == 0);
+        CHECK(end == (buffer + 2));
+
+        reset();
+        CHECK(strcmp(UTIL_i16tos(buffer, SiXtos_value, &end), "-1") == 0);
+        CHECK(end == (buffer + 2));
+
+        reset();
+        CHECK(strcmp(UTIL_i32tos(buffer, SiXtos_value, &end), "-1") == 0);
+        CHECK(end == (buffer + 2));
+
+        reset();
+        CHECK(strcmp(UTIL_i64tos(buffer, SiXtos_value, &end), "-1") == 0);
+        CHECK(end == (buffer + 2));
+
+        reset();
+        CHECK(strcmp(UTIL_ui8tos(buffer, SiXtos_value, &end), "255") == 0);
+        CHECK(end == (buffer + 3));
+
+        reset();
+        CHECK(strcmp(UTIL_ui16tos(buffer, SiXtos_value, &end), "65535") == 0);
+        CHECK(end == (buffer + 5));
+
+        reset();
+        CHECK(strcmp(UTIL_ui32tos(buffer, SiXtos_value, &end), "4294967295") == 0);
+        CHECK(end == (buffer + 10));
+
+        reset();
+        CHECK(strcmp(UTIL_ui64tos(buffer, SiXtos_value, &end), "18446744073709551615") == 0);
+        CHECK(end == (buffer + 20));
+    }
+#undef SiXtos_value
+
+
+
+#undef SiXtos_value
+#define SiXtos_value (1)
+    {
+        reset();
+        CHECK(strcmp(UTIL_i8tos(buffer, SiXtos_value, &end), "1") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_i16tos(buffer, SiXtos_value, &end), "1") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_i32tos(buffer, SiXtos_value, &end), "1") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_i64tos(buffer, SiXtos_value, &end), "1") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_ui8tos(buffer, SiXtos_value, &end), "1") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_ui16tos(buffer, SiXtos_value, &end), "1") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_ui32tos(buffer, SiXtos_value, &end), "1") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_ui64tos(buffer, SiXtos_value, &end), "1") == 0);
+        CHECK(end == (buffer + 1));
+    }
+#undef SiXtos_value
+
+
+
+#undef SiXtos_value
+#define SiXtos_value (5)
+    {
+        reset();
+        CHECK(strcmp(UTIL_i8tos(buffer, SiXtos_value, &end), "5") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_i16tos(buffer, SiXtos_value, &end), "5") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_i32tos(buffer, SiXtos_value, &end), "5") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_i64tos(buffer, SiXtos_value, &end), "5") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_ui8tos(buffer, SiXtos_value, &end), "5") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_ui16tos(buffer, SiXtos_value, &end), "5") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_ui32tos(buffer, SiXtos_value, &end), "5") == 0);
+        CHECK(end == (buffer + 1));
+
+        reset();
+        CHECK(strcmp(UTIL_ui64tos(buffer, SiXtos_value, &end), "5") == 0);
+        CHECK(end == (buffer + 1));
+    }
+#undef SiXtos_value
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_i8tos(buffer, INT8_MIN, &end), "-128") == 0);
+    CHECK(end == (buffer + 4));
+
+    reset();
+    CHECK(strcmp(UTIL_i16tos(buffer, INT8_MIN, &end), "-128") == 0);
+    CHECK(end == (buffer + 4));
+
+    reset();
+    CHECK(strcmp(UTIL_i32tos(buffer, INT8_MIN, &end), "-128") == 0);
+    CHECK(end == (buffer + 4));
+
+    reset();
+    CHECK(strcmp(UTIL_i64tos(buffer, INT8_MIN, &end), "-128") == 0);
+    CHECK(end == (buffer + 4));
+
+    reset();
+    CHECK(strcmp(UTIL_ui8tos(buffer, INT8_MIN, &end), "128") == 0);
+    CHECK(end == (buffer + 3));
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_i8tos(buffer, INT8_MAX, &end), "127") == 0);
+    CHECK(end == (buffer + 3));
+
+    reset();
+    CHECK(strcmp(UTIL_i16tos(buffer, INT8_MAX, &end), "127") == 0);
+    CHECK(end == (buffer + 3));
+
+    reset();
+    CHECK(strcmp(UTIL_i32tos(buffer, INT8_MAX, &end), "127") == 0);
+    CHECK(end == (buffer + 3));
+
+    reset();
+    CHECK(strcmp(UTIL_i64tos(buffer, INT8_MAX, &end), "127") == 0);
+    CHECK(end == (buffer + 3));
+
+    reset();
+    CHECK(strcmp(UTIL_ui8tos(buffer, INT8_MAX, &end), "127") == 0);
+    CHECK(end == (buffer + 3));
+
+    reset();
+    CHECK(strcmp(UTIL_ui16tos(buffer, INT8_MAX, &end), "127") == 0);
+    CHECK(end == (buffer + 3));
+
+    reset();
+    CHECK(strcmp(UTIL_ui32tos(buffer, INT8_MAX, &end), "127") == 0);
+    CHECK(end == (buffer + 3));
+
+    reset();
+    CHECK(strcmp(UTIL_ui64tos(buffer, INT8_MAX, &end), "127") == 0);
+    CHECK(end == (buffer + 3));
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_i8tos(buffer, (int8_t)UINT8_MAX, &end), "-1") == 0);
+    CHECK(end == (buffer + 2));
+
+    reset();
+    CHECK(strcmp(UTIL_i16tos(buffer, UINT8_MAX, &end), "255") == 0);
+    CHECK(end == (buffer + 3));
+
+    reset();
+    CHECK(strcmp(UTIL_i32tos(buffer, UINT8_MAX, &end), "255") == 0);
+    CHECK(end == (buffer + 3));
+
+    reset();
+    CHECK(strcmp(UTIL_i64tos(buffer, UINT8_MAX, &end), "255") == 0);
+    CHECK(end == (buffer + 3));
+
+    reset();
+    CHECK(strcmp(UTIL_ui8tos(buffer, UINT8_MAX, &end), "255") == 0);
+    CHECK(end == (buffer + 3));
+
+    reset();
+    CHECK(strcmp(UTIL_ui16tos(buffer, UINT8_MAX, &end), "255") == 0);
+    CHECK(end == (buffer + 3));
+
+    reset();
+    CHECK(strcmp(UTIL_ui32tos(buffer, UINT8_MAX, &end), "255") == 0);
+    CHECK(end == (buffer + 3));
+
+    reset();
+    CHECK(strcmp(UTIL_ui64tos(buffer, UINT8_MAX, &end), "255") == 0);
+    CHECK(end == (buffer + 3));
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_i16tos(buffer, INT16_MIN, &end), "-32768") == 0);
+    CHECK(end == (buffer + 6));
+
+    reset();
+    CHECK(strcmp(UTIL_i32tos(buffer, INT16_MIN, &end), "-32768") == 0);
+    CHECK(end == (buffer + 6));
+
+    reset();
+    CHECK(strcmp(UTIL_i64tos(buffer, INT16_MIN, &end), "-32768") == 0);
+    CHECK(end == (buffer + 6));
+
+    reset();
+    CHECK(strcmp(UTIL_ui16tos(buffer, INT16_MIN, &end), "32768") == 0);
+    CHECK(end == (buffer + 5));
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_i16tos(buffer, INT16_MAX, &end), "32767") == 0);
+    CHECK(end == (buffer + 5));
+
+    reset();
+    CHECK(strcmp(UTIL_i32tos(buffer, INT16_MAX, &end), "32767") == 0);
+    CHECK(end == (buffer + 5));
+
+    reset();
+    CHECK(strcmp(UTIL_i64tos(buffer, INT16_MAX, &end), "32767") == 0);
+    CHECK(end == (buffer + 5));
+
+    reset();
+    CHECK(strcmp(UTIL_ui16tos(buffer, INT16_MAX, &end), "32767") == 0);
+    CHECK(end == (buffer + 5));
+
+    reset();
+    CHECK(strcmp(UTIL_ui32tos(buffer, INT16_MAX, &end), "32767") == 0);
+    CHECK(end == (buffer + 5));
+
+    reset();
+    CHECK(strcmp(UTIL_ui64tos(buffer, INT16_MAX, &end), "32767") == 0);
+    CHECK(end == (buffer + 5));
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_i16tos(buffer, (int16_t)UINT16_MAX, &end), "-1") == 0);
+    CHECK(end == (buffer + 2));
+
+    reset();
+    CHECK(strcmp(UTIL_i32tos(buffer, UINT16_MAX, &end), "65535") == 0);
+    CHECK(end == (buffer + 5));
+
+    reset();
+    CHECK(strcmp(UTIL_i64tos(buffer, UINT16_MAX, &end), "65535") == 0);
+    CHECK(end == (buffer + 5));
+
+    reset();
+    CHECK(strcmp(UTIL_ui16tos(buffer, UINT16_MAX, &end), "65535") == 0);
+    CHECK(end == (buffer + 5));
+
+    reset();
+    CHECK(strcmp(UTIL_ui32tos(buffer, UINT16_MAX, &end), "65535") == 0);
+    CHECK(end == (buffer + 5));
+
+    reset();
+    CHECK(strcmp(UTIL_ui64tos(buffer, UINT16_MAX, &end), "65535") == 0);
+    CHECK(end == (buffer + 5));
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_i32tos(buffer, INT32_MIN, &end), "-2147483648") == 0);
+    CHECK(end == (buffer + 11));
+
+    reset();
+    CHECK(strcmp(UTIL_i64tos(buffer, INT32_MIN, &end), "-2147483648") == 0);
+    CHECK(end == (buffer + 11));
+
+    reset();
+    CHECK(strcmp(UTIL_ui32tos(buffer, INT32_MIN, &end), "2147483648") == 0);
+    CHECK(end == (buffer + 10));
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_i32tos(buffer, INT32_MAX, &end), "2147483647") == 0);
+    CHECK(end == (buffer + 10));
+
+    reset();
+    CHECK(strcmp(UTIL_i64tos(buffer, INT32_MAX, &end), "2147483647") == 0);
+    CHECK(end == (buffer + 10));
+
+    reset();
+    CHECK(strcmp(UTIL_ui32tos(buffer, INT32_MAX, &end), "2147483647") == 0);
+    CHECK(end == (buffer + 10));
+
+    reset();
+    CHECK(strcmp(UTIL_ui64tos(buffer, INT32_MAX, &end), "2147483647") == 0);
+    CHECK(end == (buffer + 10));
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_i32tos(buffer, (int32_t)UINT32_MAX, &end), "-1") == 0);
+    CHECK(end == (buffer + 2));
+
+    reset();
+    CHECK(strcmp(UTIL_i64tos(buffer, UINT32_MAX, &end), "4294967295") == 0);
+    CHECK(end == (buffer + 10));
+
+    reset();
+    CHECK(strcmp(UTIL_ui32tos(buffer, UINT32_MAX, &end), "4294967295") == 0);
+    CHECK(end == (buffer + 10));
+
+    reset();
+    CHECK(strcmp(UTIL_ui64tos(buffer, UINT32_MAX, &end), "4294967295") == 0);
+    CHECK(end == (buffer + 10));
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_i64tos(buffer, INT64_MIN, &end), "-9223372036854775808") == 0);
+    CHECK(end == (buffer + 20));
+
+    reset();
+    CHECK(strcmp(UTIL_ui64tos(buffer, INT64_MIN, &end), "9223372036854775808") == 0);
+    CHECK(end == (buffer + 19));
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_i64tos(buffer, INT64_MAX, &end), "9223372036854775807") == 0);
+    CHECK(end == (buffer + 19));
+
+    reset();
+    CHECK(strcmp(UTIL_ui64tos(buffer, INT64_MAX, &end), "9223372036854775807") == 0);
+    CHECK(end == (buffer + 19));
+
+
+
+    reset();
+    CHECK(strcmp(UTIL_i64tos(buffer, (int64_t)UINT64_MAX, &end), "-1") == 0);
+    CHECK(end == (buffer + 2));
+
+    reset();
+    CHECK(strcmp(UTIL_ui64tos(buffer, UINT64_MAX, &end), "18446744073709551615") == 0);
+    CHECK(end == (buffer + 20));
+}
 
 TEST_CASE("string.h string to signed integer") {}
 
