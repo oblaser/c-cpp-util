@@ -14,6 +14,10 @@ copyright       MIT - Copyright (c) 2026 Oliver Blaser
 #include <Windows.h>
 #endif
 
+#if ___UTIL_PLAT_ZEPHYR
+#include <zephyr/kernel.h>
+#endif
+
 
 
 #define LITERAL_1e6 (1000000)
@@ -36,8 +40,8 @@ int UTIL_sleep_ms(uint32_t t_ms)
 
 #elif ___UTIL_PLAT_ZEPHYR
 
-    if (t_ms > INT32_MAX) { return -1; }
-    if (0 != k_msleep((int32_t)t_ms)) { return -1; }
+    if (t_ms > INT32_MAX) { return -(EINVAL); }
+    if (0 != k_msleep((int32_t)t_ms)) { return -(EINTR); }
     return 0;
 
 #else
@@ -65,8 +69,8 @@ int UTIL_sleep_us(uint32_t t_us)
 
 #elif ___UTIL_PLAT_ZEPHYR
 
-    if (t_us > INT32_MAX) { return -1; }
-    if (0 != k_usleep((int32_t)t_us)) { return -1; }
+    if (t_us > INT32_MAX) { return -(EINVAL); }
+    if (0 != k_usleep((int32_t)t_us)) { return -(EINTR); }
     return 0;
 
 #else
