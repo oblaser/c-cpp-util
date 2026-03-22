@@ -434,6 +434,50 @@ char* UTIL_ui16tos(char* dst, uint16_t value, char** end)
 // https://en.cppreference.com/w/cpp/string/basic_string/stol
 // https://en.cppreference.com/w/c/error/errno_macros.html
 
+#define UTIL_stoiX(_bits)                                                             \
+    {                                                                                 \
+        if (!str)                                                                     \
+        {                                                                             \
+            errno = EINVAL;                                                           \
+            if (end) { *end = str; }                                                  \
+            return 0;                                                                 \
+        }                                                                             \
+                                                                                      \
+        int##_bits##_t r;                                                             \
+        uint##_bits##_t tmp;                                                          \
+                                                                                      \
+        if (*str == '-')                                                              \
+        {                                                                             \
+            tmp = UTIL_stoui##_bits(str + 1, end);                                    \
+            if ((tmp > ((uint##_bits##_t)INT##_bits##_MAX + 1)) || (errno == ERANGE)) \
+            {                                                                         \
+                errno = ERANGE;                                                       \
+                r = INT##_bits##_MIN;                                                 \
+            }                                                                         \
+            else { r = (int##_bits##_t)(-tmp); }                                      \
+        }                                                                             \
+        else                                                                          \
+        {                                                                             \
+            tmp = UTIL_stoui##_bits(str, end);                                        \
+            if ((tmp > (uint##_bits##_t)INT##_bits##_MAX) || (errno == ERANGE))       \
+            {                                                                         \
+                errno = ERANGE;                                                       \
+                r = INT##_bits##_MAX;                                                 \
+            }                                                                         \
+            else { r = (int##_bits##_t)tmp; }                                         \
+        }                                                                             \
+                                                                                      \
+        return r;                                                                     \
+    }
+
+int8_t UTIL_stoi8(const char* str, const char** end) { UTIL_stoiX(8); }
+
+int16_t UTIL_stoi16(const char* str, const char** end) { UTIL_stoiX(16); }
+
+int32_t UTIL_stoi32(const char* str, const char** end) { UTIL_stoiX(32); }
+
+int64_t UTIL_stoi64(const char* str, const char** end) { UTIL_stoiX(64); }
+
 #define UTIL_stouiX(_bits)                                \
     {                                                     \
         if (!str)                                         \

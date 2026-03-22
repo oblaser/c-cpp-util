@@ -861,30 +861,628 @@ TEST_CASE("string.h integer to string")
     CHECK(end == (buffer + 20));
 }
 
-TEST_CASE("string.h string to signed integer") {}
-
-#define CHECK_STOUI_INVAL(_str)  \
-    {                            \
-        init((_str));            \
-        UTIL_stoui8(str, &end);  \
-        CHECK(end == (str + 0)); \
-        CHECK(errno == EINVAL);  \
-                                 \
-        init((_str));            \
-        UTIL_stoui16(str, &end); \
-        CHECK(end == (str + 0)); \
-        CHECK(errno == EINVAL);  \
-                                 \
-        init((_str));            \
-        UTIL_stoui32(str, &end); \
-        CHECK(end == (str + 0)); \
-        CHECK(errno == EINVAL);  \
-                                 \
-        init((_str));            \
-        UTIL_stoui64(str, &end); \
-        CHECK(end == (str + 0)); \
-        CHECK(errno == EINVAL);  \
+#define CHECK_STOxI_INVAL(_ui_i, _str)  \
+    {                                   \
+        init((_str));                   \
+        UTIL_sto##_ui_i##8(str, &end);  \
+        CHECK(errno == EINVAL);         \
+                                        \
+        init((_str));                   \
+        UTIL_sto##_ui_i##16(str, &end); \
+        CHECK(errno == EINVAL);         \
+                                        \
+        init((_str));                   \
+        UTIL_sto##_ui_i##32(str, &end); \
+        CHECK(errno == EINVAL);         \
+                                        \
+        init((_str));                   \
+        UTIL_sto##_ui_i##64(str, &end); \
+        CHECK(errno == EINVAL);         \
     }
+
+TEST_CASE("string.h signed string to signed integer")
+{
+    const char* input;
+    const char* str;
+    const char* end;
+
+    auto init = [&](const char* s) {
+        str = s;
+        errno = 0;
+    };
+
+
+
+    CHECK_STOxI_INVAL(i, NULL);
+    CHECK_STOxI_INVAL(i, "");
+    CHECK_STOxI_INVAL(i, "a");
+    CHECK_STOxI_INVAL(i, "-");
+    CHECK_STOxI_INVAL(i, "-a");
+    CHECK_STOxI_INVAL(i, "+");
+    CHECK_STOxI_INVAL(i, "+a");
+
+
+
+    input = "-0";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == 0);
+    CHECK(end == (str + 2));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == 0);
+    CHECK(end == (str + 2));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == 0);
+    CHECK(end == (str + 2));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == 0);
+    CHECK(end == (str + 2));
+    CHECK(errno == 0);
+
+
+
+    input = "-1";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == -1);
+    CHECK(end == (str + 2));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == -1);
+    CHECK(end == (str + 2));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == -1);
+    CHECK(end == (str + 2));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == -1);
+    CHECK(end == (str + 2));
+    CHECK(errno == 0);
+
+
+
+    input = "-12";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == -12);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == -12);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == -12);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == -12);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+
+
+    input = "-128";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == -128);
+    CHECK(end == (str + 4));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == -128);
+    CHECK(end == (str + 4));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == -128);
+    CHECK(end == (str + 4));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == -128);
+    CHECK(end == (str + 4));
+    CHECK(errno == 0);
+
+
+
+    input = "-129";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == INT8_MIN);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == -129);
+    CHECK(end == (str + 4));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == -129);
+    CHECK(end == (str + 4));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == -129);
+    CHECK(end == (str + 4));
+    CHECK(errno == 0);
+
+    for (int i = -230; i <= -130; ++i)
+    {
+        const auto tmp = std::to_string(i);
+        init(tmp.c_str());
+        CHECK(UTIL_stoi8(str, &end) == INT8_MIN);
+        CHECK(errno == ERANGE);
+    }
+
+
+
+    input = "-32768";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == INT8_MIN);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == -32768);
+    CHECK(end == (str + 6));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == -32768);
+    CHECK(end == (str + 6));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == -32768);
+    CHECK(end == (str + 6));
+    CHECK(errno == 0);
+
+
+
+    input = "-32769";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == INT8_MIN);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == INT16_MIN);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == -32769);
+    CHECK(end == (str + 6));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == -32769);
+    CHECK(end == (str + 6));
+    CHECK(errno == 0);
+
+    for (int i = -32870; i <= -32770; ++i)
+    {
+        const auto tmp = std::to_string(i);
+        init(tmp.c_str());
+        CHECK(UTIL_stoi16(str, &end) == INT16_MIN);
+        CHECK(errno == ERANGE);
+    }
+
+
+
+    input = "-2147483648";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == INT8_MIN);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == INT16_MIN);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == -2147483648);
+    CHECK(end == (str + 11));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == -2147483648);
+    CHECK(end == (str + 11));
+    CHECK(errno == 0);
+
+
+
+    input = "-2147483649";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == INT8_MIN);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == INT16_MIN);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == INT32_MIN);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == -2147483649);
+    CHECK(end == (str + 11));
+    CHECK(errno == 0);
+
+    for (int64_t i = -2147483750; i <= -2147483650; ++i)
+    {
+        const auto tmp = std::to_string(i);
+        init(tmp.c_str());
+        CHECK(UTIL_stoi32(str, &end) == INT32_MIN);
+        CHECK(errno == ERANGE);
+    }
+
+
+
+    input = "-9223372036854775808";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == INT8_MIN);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == INT16_MIN);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == INT32_MIN);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == INT64_MIN);
+    CHECK(end == (str + 20));
+    CHECK(errno == 0);
+
+
+
+    input = "-9223372036854775809";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == INT8_MIN);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == INT16_MIN);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == INT32_MIN);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == INT64_MIN);
+    CHECK(errno == ERANGE);
+
+    for (int i = 5809; i <= 5909; ++i)
+    {
+        const auto tmp = "-922337203685477" + std::to_string(i);
+        init(tmp.c_str());
+        CHECK(UTIL_stoi64(str, &end) == INT64_MIN);
+        CHECK(errno == ERANGE);
+    }
+}
+
+TEST_CASE("string.h unsigned string to signed integer")
+{
+    const char* input;
+    const char* str;
+    const char* end;
+
+    auto init = [&](const char* s) {
+        str = s;
+        errno = 0;
+    };
+
+
+
+    CHECK_STOxI_INVAL(i, NULL);
+    CHECK_STOxI_INVAL(i, "");
+    CHECK_STOxI_INVAL(i, "a");
+    CHECK_STOxI_INVAL(i, "-");
+    CHECK_STOxI_INVAL(i, "-a");
+    CHECK_STOxI_INVAL(i, "+");
+    CHECK_STOxI_INVAL(i, "+a");
+
+
+
+    input = "0";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == 0);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == 0);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == 0);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == 0);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+
+
+    input = "1";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == 1);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == 1);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == 1);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == 1);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+
+
+    input = "12";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == 12);
+    CHECK(end == (str + 2));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == 12);
+    CHECK(end == (str + 2));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == 12);
+    CHECK(end == (str + 2));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == 12);
+    CHECK(end == (str + 2));
+    CHECK(errno == 0);
+
+
+
+    input = "127";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == 127);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == 127);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == 127);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == 127);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+
+
+    input = "128";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == INT8_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == 128);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == 128);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == 128);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    for (int i = 129; i <= 229; ++i)
+    {
+        const auto tmp = std::to_string(i);
+        init(tmp.c_str());
+        CHECK(UTIL_stoi8(str, &end) == INT8_MAX);
+        CHECK(errno == ERANGE);
+    }
+
+
+
+    input = "32767";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == INT8_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == 32767);
+    CHECK(end == (str + 5));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == 32767);
+    CHECK(end == (str + 5));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == 32767);
+    CHECK(end == (str + 5));
+    CHECK(errno == 0);
+
+
+
+    input = "32768";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == INT8_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == INT16_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == 32768);
+    CHECK(end == (str + 5));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == 32768);
+    CHECK(end == (str + 5));
+    CHECK(errno == 0);
+
+    for (int i = 32769; i <= 32869; ++i)
+    {
+        const auto tmp = std::to_string(i);
+        init(tmp.c_str());
+        CHECK(UTIL_stoi16(str, &end) == INT16_MAX);
+        CHECK(errno == ERANGE);
+    }
+
+
+
+    input = "2147483647";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == INT8_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == INT16_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == 2147483647);
+    CHECK(end == (str + 10));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == 2147483647);
+    CHECK(end == (str + 10));
+    CHECK(errno == 0);
+
+
+
+    input = "2147483648";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == INT8_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == INT16_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == INT32_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == 2147483648);
+    CHECK(end == (str + 10));
+    CHECK(errno == 0);
+
+    for (int64_t i = 2147483649; i <= 2147483749; ++i)
+    {
+        const auto tmp = std::to_string(i);
+        init(tmp.c_str());
+        CHECK(UTIL_stoi32(str, &end) == INT32_MAX);
+        CHECK(errno == ERANGE);
+    }
+
+
+
+    input = "9223372036854775807";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == INT8_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == INT16_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == INT32_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == 9223372036854775807);
+    CHECK(end == (str + 19));
+    CHECK(errno == 0);
+
+
+
+    input = "9223372036854775808";
+
+    init(input);
+    CHECK(UTIL_stoi8(str, &end) == INT8_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi16(str, &end) == INT16_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi32(str, &end) == INT32_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoi64(str, &end) == INT64_MAX);
+    CHECK(errno == ERANGE);
+
+    for (int i = 5809; i <= 5909; ++i)
+    {
+        const auto tmp = "922337203685477" + std::to_string(i);
+        init(tmp.c_str());
+        CHECK(UTIL_stoi64(str, &end) == INT64_MAX);
+        CHECK(errno == ERANGE);
+    }
+}
 
 TEST_CASE("string.h string to unsigned integer")
 {
@@ -899,11 +1497,13 @@ TEST_CASE("string.h string to unsigned integer")
 
 
 
-    CHECK_STOUI_INVAL(NULL);
-    CHECK_STOUI_INVAL("");
-    CHECK_STOUI_INVAL("a");
-    CHECK_STOUI_INVAL("-");
-    CHECK_STOUI_INVAL("+");
+    CHECK_STOxI_INVAL(ui, NULL);
+    CHECK_STOxI_INVAL(ui, "");
+    CHECK_STOxI_INVAL(ui, "a");
+    CHECK_STOxI_INVAL(ui, "-");
+    CHECK_STOxI_INVAL(ui, "-a");
+    CHECK_STOxI_INVAL(ui, "+");
+    CHECK_STOxI_INVAL(ui, "+a");
 
 
 
@@ -1153,7 +1753,7 @@ TEST_CASE("string.h string to unsigned integer")
     CHECK(errno == ERANGE);
 
     init(input);
-    CHECK(UTIL_stoui64(str, &end) == 18446744073709551615);
+    CHECK(UTIL_stoui64(str, &end) == 18446744073709551615ull);
     CHECK(end == (str + 20));
     CHECK(errno == 0);
 
