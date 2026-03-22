@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            19.02.2026
+date            22.03.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -433,6 +433,53 @@ char* UTIL_ui16tos(char* dst, uint16_t value, char** end)
 // https://en.cppreference.com/w/c/string/byte/strtol.html
 // https://en.cppreference.com/w/cpp/string/basic_string/stol
 // https://en.cppreference.com/w/c/error/errno_macros.html
+
+#define UTIL_stouiX(_bits)                                \
+    {                                                     \
+        if (!str)                                         \
+        {                                                 \
+            errno = EINVAL;                               \
+            if (end) { *end = str; }                      \
+            return 0;                                     \
+        }                                                 \
+                                                          \
+        uint##_bits##_t val = 0;                          \
+        uint##_bits##_t last = 0;                         \
+        const char* p = str;                              \
+                                                          \
+        if (!((*p >= 0x30) && (*p <= 0x39) && (*p != 0))) \
+        {                                                 \
+            errno = EINVAL;                               \
+            if (end) { *end = p; }                        \
+            return 0;                                     \
+        }                                                 \
+                                                          \
+        while ((*p >= 0x30) && (*p <= 0x39) && (*p != 0)) \
+        {                                                 \
+            val *= 10;                                    \
+                                                          \
+            val += (*p - 0x30);                           \
+            ++p;                                          \
+                                                          \
+            if ((val / 10) < last) /* overflow */         \
+            {                                             \
+                errno = ERANGE;                           \
+                val = UINT##_bits##_MAX;                  \
+                break;                                    \
+            }                                             \
+                                                          \
+            last = val;                                   \
+        }                                                 \
+                                                          \
+        if (end) { *end = p; }                            \
+                                                          \
+        return val;                                       \
+    }
+
+uint8_t UTIL_stoui8(const char* str, const char** end) { UTIL_stouiX(8); }
+uint16_t UTIL_stoui16(const char* str, const char** end) { UTIL_stouiX(16); }
+uint32_t UTIL_stoui32(const char* str, const char** end) { UTIL_stouiX(32); }
+uint64_t UTIL_stoui64(const char* str, const char** end) { UTIL_stouiX(64); }
 
 char* UTIL_ui8toxs(char* dst, uint8_t value, char** end)
 {

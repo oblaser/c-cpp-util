@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            19.02.2026
+date            22.03.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -863,7 +863,328 @@ TEST_CASE("string.h integer to string")
 
 TEST_CASE("string.h string to signed integer") {}
 
-TEST_CASE("string.h string to unsigned integer") {}
+#define CHECK_STOUI_INVAL(_str)  \
+    {                            \
+        init((_str));            \
+        UTIL_stoui8(str, &end);  \
+        CHECK(end == (str + 0)); \
+        CHECK(errno == EINVAL);  \
+                                 \
+        init((_str));            \
+        UTIL_stoui16(str, &end); \
+        CHECK(end == (str + 0)); \
+        CHECK(errno == EINVAL);  \
+                                 \
+        init((_str));            \
+        UTIL_stoui32(str, &end); \
+        CHECK(end == (str + 0)); \
+        CHECK(errno == EINVAL);  \
+                                 \
+        init((_str));            \
+        UTIL_stoui64(str, &end); \
+        CHECK(end == (str + 0)); \
+        CHECK(errno == EINVAL);  \
+    }
+
+TEST_CASE("string.h string to unsigned integer")
+{
+    const char* input;
+    const char* str;
+    const char* end;
+
+    auto init = [&](const char* s) {
+        str = s;
+        errno = 0;
+    };
+
+
+
+    CHECK_STOUI_INVAL(NULL);
+    CHECK_STOUI_INVAL("");
+    CHECK_STOUI_INVAL("a");
+    CHECK_STOUI_INVAL("-");
+    CHECK_STOUI_INVAL("+");
+
+
+
+    input = "0";
+
+    init(input);
+    CHECK(UTIL_stoui8(str, &end) == 0);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui16(str, &end) == 0);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui32(str, &end) == 0);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui64(str, &end) == 0);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+
+
+    input = "1";
+
+    init(input);
+    CHECK(UTIL_stoui8(str, &end) == 1);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui16(str, &end) == 1);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui32(str, &end) == 1);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui64(str, &end) == 1);
+    CHECK(end == (str + 1));
+    CHECK(errno == 0);
+
+
+
+    input = "123";
+
+    init(input);
+    CHECK(UTIL_stoui8(str, &end) == 123);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui16(str, &end) == 123);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui32(str, &end) == 123);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui64(str, &end) == 123);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+
+
+    input = "255";
+
+    init(input);
+    CHECK(UTIL_stoui8(str, &end) == 255);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui16(str, &end) == 255);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui32(str, &end) == 255);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui64(str, &end) == 255);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+
+
+    input = "256";
+
+    init(input);
+    CHECK(UTIL_stoui8(str, &end) == UINT8_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoui16(str, &end) == 256);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui32(str, &end) == 256);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui64(str, &end) == 256);
+    CHECK(end == (str + 3));
+    CHECK(errno == 0);
+
+    for (int i = 257; i <= 357; ++i)
+    {
+        const auto tmp = std::to_string(i);
+        init(tmp.c_str());
+        CHECK(UTIL_stoui8(str, &end) == UINT8_MAX);
+        CHECK(errno == ERANGE);
+    }
+
+
+
+    input = "65535";
+
+    init(input);
+    CHECK(UTIL_stoui8(str, &end) == UINT8_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoui16(str, &end) == 65535);
+    CHECK(end == (str + 5));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui32(str, &end) == 65535);
+    CHECK(end == (str + 5));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui64(str, &end) == 65535);
+    CHECK(end == (str + 5));
+    CHECK(errno == 0);
+
+
+
+    input = "65536";
+
+    init(input);
+    CHECK(UTIL_stoui8(str, &end) == UINT8_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoui16(str, &end) == UINT16_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoui32(str, &end) == 65536);
+    CHECK(end == (str + 5));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui64(str, &end) == 65536);
+    CHECK(end == (str + 5));
+    CHECK(errno == 0);
+
+    for (int i = 65537; i <= 65637; ++i)
+    {
+        const auto tmp = std::to_string(i);
+        init(tmp.c_str());
+        CHECK(UTIL_stoui16(str, &end) == UINT16_MAX);
+        CHECK(errno == ERANGE);
+    }
+
+
+
+    input = "4294967295";
+
+    init(input);
+    CHECK(UTIL_stoui8(str, &end) == UINT8_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoui16(str, &end) == UINT16_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoui32(str, &end) == 4294967295);
+    CHECK(end == (str + 10));
+    CHECK(errno == 0);
+
+    init(input);
+    CHECK(UTIL_stoui64(str, &end) == 4294967295);
+    CHECK(end == (str + 10));
+    CHECK(errno == 0);
+
+
+
+    input = "4294967296";
+
+    init(input);
+    CHECK(UTIL_stoui8(str, &end) == UINT8_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoui16(str, &end) == UINT16_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoui32(str, &end) == UINT32_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoui64(str, &end) == 4294967296);
+    CHECK(end == (str + 10));
+    CHECK(errno == 0);
+
+    for (uint64_t i = 4294967297; i <= 4294967397; ++i)
+    {
+        const auto tmp = std::to_string(i);
+        init(tmp.c_str());
+        CHECK(UTIL_stoui32(str, &end) == UINT32_MAX);
+        CHECK(errno == ERANGE);
+    }
+
+
+
+    input = "18446744073709551615";
+
+    init(input);
+    CHECK(UTIL_stoui8(str, &end) == UINT8_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoui16(str, &end) == UINT16_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoui32(str, &end) == UINT32_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoui64(str, &end) == 18446744073709551615);
+    CHECK(end == (str + 20));
+    CHECK(errno == 0);
+
+
+
+    input = "18446744073709551616";
+
+    init(input);
+    CHECK(UTIL_stoui8(str, &end) == UINT8_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoui16(str, &end) == UINT16_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoui32(str, &end) == UINT32_MAX);
+    CHECK(errno == ERANGE);
+
+    init(input);
+    CHECK(UTIL_stoui64(str, &end) == UINT64_MAX);
+    CHECK(errno == ERANGE);
+
+    for (int i = 1617; i <= 1717; ++i)
+    {
+        const auto tmp = "1844674407370955" + std::to_string(i);
+        init(tmp.c_str());
+        CHECK(UTIL_stoui64(str, &end) == UINT64_MAX);
+        CHECK(errno == ERANGE);
+    }
+}
 
 TEST_CASE("string.h integer to hex string")
 {

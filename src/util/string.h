@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            19.02.2026
+date            22.03.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -188,8 +188,9 @@ int UTIL_isHexStr(const char* str, size_t count);
 //! - `end` [out] <i>optional</i> Pointer to a pointer which will point to the character after the converted number
 //!
 //! If the value is too big for the target data type, `errno` is set to `ERANGE` and the types maximal or minimal value
-//! is returned.
-//! If the string does not represent a number, `errno` is set to `EINVAL` and `0` is returned.
+//! is returned, and the value of `*end` is undefined.
+//! If the string does not represent a number, `errno` is set to `EINVAL` and `0` is returned, and the value of `*end`
+//! is undefined.
 //!
 /// @{
 
@@ -213,15 +214,15 @@ static inline char* UTIL_ui8tos(char* dst, uint8_t value, char** end) { return U
 static inline char* UTIL_ui16tos(char* dst, uint16_t value, char** end) { return UTIL_ui32tos(dst, (uint32_t)value, end); }
 #endif
 
-int8_t UTIL_stoi8(const char* str, char** end);
-int16_t UTIL_stoi16(const char* str, char** end);
-int32_t UTIL_stoi32(const char* str, char** end);
-int64_t UTIL_stoi64(const char* str, char** end);
+int8_t UTIL_stoi8(const char* str, const char** end);
+int16_t UTIL_stoi16(const char* str, const char** end);
+int32_t UTIL_stoi32(const char* str, const char** end);
+int64_t UTIL_stoi64(const char* str, const char** end);
 
-uint8_t UTIL_stoui8(const char* str, char** end);
-uint16_t UTIL_stoui16(const char* str, char** end);
-uint32_t UTIL_stoui32(const char* str, char** end);
-uint64_t UTIL_stoui64(const char* str, char** end);
+uint8_t UTIL_stoui8(const char* str, const char** end);
+uint16_t UTIL_stoui16(const char* str, const char** end);
+uint32_t UTIL_stoui32(const char* str, const char** end);
+uint64_t UTIL_stoui64(const char* str, const char** end);
 
 /// @}
 
