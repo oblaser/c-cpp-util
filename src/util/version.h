@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            17.03.2026
+date            22.03.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -102,9 +102,11 @@ void UTIL_semver_clear(UTIL_semver_t* v);
 /**
  * @brief Sets pre-release and build identifiers.
  *
+ * Empty strings and null pointers are skipped.
+ *
  * On error, `*v` remains unchanged.
  *
- * If `UTIL_semver_t::buffer` is too small, `errno` is set to `ENOMEM` and `-1` is returned.
+ * If `UTIL_semver_t::stack` is too small, `errno` is set to `ENOMEM` and `-1` is returned.
  *
  * @param [out] v
  * @param pr Pre-release identifier list

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            19.03.2026
+date            22.03.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -69,7 +69,11 @@ void UTIL_semver_clear(UTIL_semver_t* v)
 
 int UTIL_semver_setPrBuild(UTIL_semver_t* v, const char* const * pr, size_t prCount, const char* const * build, size_t buildCount)
 {
-    // TODO skip empty identifiers
+    if (!v)
+    {
+        errno = EINVAL;
+        return -1;
+    }
 
 
 
@@ -77,18 +81,34 @@ int UTIL_semver_setPrBuild(UTIL_semver_t* v, const char* const * pr, size_t prCo
 
     size_t reqSize = 0;
 
-    for (size_t i = 0; i < prCount; ++i)
+    if (pr)
     {
-        reqSize += UTIL_strlen(*(pr + i));
-        ++reqSize; // null terminator
-        reqSize += sizeof(uintptr_t);
+        for (size_t i = 0; i < prCount; ++i)
+        {
+            const char* const p = *(pr + i);
+
+            if (p && *p) // valid pointer and not empty string
+            {
+                reqSize += UTIL_strlen(p);
+                ++reqSize; // null terminator
+                reqSize += sizeof(uintptr_t);
+            }
+        }
     }
 
-    for (size_t i = 0; i < buildCount; ++i)
+    if (build)
     {
-        reqSize += UTIL_strlen(*(build + i));
-        ++reqSize; // null terminator
-        reqSize += sizeof(uintptr_t);
+        for (size_t i = 0; i < buildCount; ++i)
+        {
+            const char* const p = *(build + i);
+
+            if (p && *p) // valid pointer and not empty string
+            {
+                reqSize += UTIL_strlen(p);
+                ++reqSize; // null terminator
+                reqSize += sizeof(uintptr_t);
+            }
+        }
     }
 
     if (reqSize > v->stackSize)
@@ -101,43 +121,61 @@ int UTIL_semver_setPrBuild(UTIL_semver_t* v, const char* const * pr, size_t prCo
 
     // copy
 
-    v->prCount = prCount;
-    v->buildCount = buildCount;
+    v->prCount = 0;
+    v->buildCount = 0;
 
     char* p = (char*)(v->stack);
     _Static_assert((sizeof(**pr) == 1) && (sizeof(**build) == 1), "sizeof(char) is expected to be 1");
     _Static_assert((sizeof(uintptr_t) == sizeof(p)) && (sizeof(uintptr_t) == sizeof(char*)), "sizeof(uintptr_t) is expected to be equal to sizeof(char*)");
 
-    for (size_t i = 0; i < prCount; ++i)
+    if (pr)
     {
-        *((uintptr_t*)(v->stack + v->stackSize - ((i + 1) * sizeof(uintptr_t)))) = (uintptr_t)p;
-
-        const char* prStr = *(pr + i);
-        while (*prStr != 0)
+        for (size_t i = 0; i < prCount; ++i)
         {
-            *p = *prStr;
-            ++p;
-            ++prStr;
-        }
+            const char* prStr = *(pr + i);
 
-        *p = 0;
-        ++p;
+            if (prStr && *prStr) // valid pointer and not empty string
+            {
+                *((uintptr_t*)(v->stack + v->stackSize - ((v->prCount + 1) * sizeof(uintptr_t)))) = (uintptr_t)p;
+
+                while (*prStr != 0)
+                {
+                    *p = *prStr;
+                    ++p;
+                    ++prStr;
+                }
+
+                *p = 0;
+                ++p;
+
+                ++(v->prCount);
+            }
+        }
     }
 
-    for (size_t i = 0; i < buildCount; ++i)
+    if (build)
     {
-        *((uintptr_t*)(v->stack + v->stackSize - (prCount * sizeof(uintptr_t)) - ((i + 1) * sizeof(uintptr_t)))) = (uintptr_t)p;
-
-        const char* buildStr = *(build + i);
-        while (*buildStr != 0)
+        for (size_t i = 0; i < buildCount; ++i)
         {
-            *p = *buildStr;
-            ++p;
-            ++buildStr;
-        }
+            const char* buildStr = *(build + i);
 
-        *p = 0;
-        ++p;
+            if (buildStr && *buildStr) // valid pointer and not empty string
+            {
+                *((uintptr_t*)(v->stack + v->stackSize - (v->prCount * sizeof(uintptr_t)) - ((v->buildCount + 1) * sizeof(uintptr_t)))) = (uintptr_t)p;
+
+                while (*buildStr != 0)
+                {
+                    *p = *buildStr;
+                    ++p;
+                    ++buildStr;
+                }
+
+                *p = 0;
+                ++p;
+
+                ++(v->buildCount);
+            }
+        }
     }
 
     return 0;

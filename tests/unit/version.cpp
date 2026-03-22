@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            17.03.2026
+date            22.03.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -180,24 +180,24 @@ TEST_CASE("version.h UTIL_semver_setPrBuild()")
     memset(expectedPointerSection, 0x5A, sizeof(expectedPointerSection));
 #endif // DBG_LOG
 
-    prCount = 4;
+    prCount = 5;
     pr[0] = "asdf";
-    pr[1] = "12";
-    pr[2] = "";
-    pr[3] = "qwertz";
+    pr[1] = NULL;
+    pr[2] = "12";
+    pr[3] = "";
+    pr[4] = "qwertz";
 
-    buildCount = 3;
+    buildCount = 4;
     build[0] = "ASDF";
     build[1] = "";
     build[2] = "q";
+    build[3] = NULL;
 
-    expectedPointerSection[0] = (v->stack + 5 + 3 + 1 + 7 + 5 + 1);
-    expectedPointerSection[1] = (v->stack + 5 + 3 + 1 + 7 + 5);
-    expectedPointerSection[2] = (v->stack + 5 + 3 + 1 + 7);
-    expectedPointerSection[3] = (v->stack + 5 + 3 + 1);
-    expectedPointerSection[4] = (v->stack + 5 + 3);
-    expectedPointerSection[5] = (v->stack + 5);
-    expectedPointerSection[6] = (v->stack);
+    expectedPointerSection[0] = (v->stack + 5 + 3 + 7 + 5);
+    expectedPointerSection[1] = (v->stack + 5 + 3 + 7);
+    expectedPointerSection[2] = (v->stack + 5 + 3);
+    expectedPointerSection[3] = (v->stack + 5);
+    expectedPointerSection[4] = (v->stack);
 
     UTIL_semver_setPrBuild(v, pr, prCount, build, buildCount);
 
@@ -212,19 +212,17 @@ TEST_CASE("version.h UTIL_semver_setPrBuild()")
     CHECK(memcmp(v->stack,
                  "asdf\0"
                  "12\0"
-                 "\0"
                  "qwertz\0"
                  "ASDF\0"
-                 "\0"
                  "q\0",
-                 24) == 0);
+                 22) == 0);
 
-    CHECK(memcmp((v->stack + v->stackSize - (sizeof(char*) * 7)), expectedPointerSection, 7) == 0);
+    CHECK(memcmp((v->stack + v->stackSize - (sizeof(char*) * 5)), expectedPointerSection, 5 * sizeof(expectedPointerSection[0])) == 0);
     CHECK(v->major == 1);
     CHECK(v->minor == 2);
     CHECK(v->patch == 3);
-    CHECK(v->prCount == 4);
-    CHECK(v->buildCount == 3);
+    CHECK(v->prCount == 3);
+    CHECK(v->buildCount == 2);
 
 
 
@@ -235,8 +233,6 @@ TEST_CASE("version.h UTIL_semver_setPrBuild()")
     memset(expectedPointerSection, 0x5A, sizeof(expectedPointerSection));
 #endif // DBG_LOG
 
-    prCount = 0;
-
     buildCount = 2;
     build[0] = "DEV";
     build[1] = "EMC";
@@ -244,9 +240,9 @@ TEST_CASE("version.h UTIL_semver_setPrBuild()")
     expectedPointerSection[0] = (v->stack + 4);
     expectedPointerSection[1] = (v->stack);
 
-    UTIL_semver_setPrBuild(v, pr, prCount, build, buildCount);
+    UTIL_semver_setPrBuild(v, NULL, 0, build, buildCount);
 
-#if DBG_LOG && 01
+#if DBG_LOG && 0
     printf("stack: %p\n", v->stack);
     hexDump(v->stack, v->stackSize);
     printf("\n");
@@ -259,12 +255,38 @@ TEST_CASE("version.h UTIL_semver_setPrBuild()")
                  "EMC\0",
                  8) == 0);
 
-    CHECK(memcmp((v->stack + v->stackSize - (sizeof(char*) * 2)), expectedPointerSection, 2) == 0);
+    CHECK(memcmp((v->stack + v->stackSize - (sizeof(char*) * 2)), expectedPointerSection, 2 * sizeof(expectedPointerSection[0])) == 0);
     CHECK(v->major == 1);
     CHECK(v->minor == 2);
     CHECK(v->patch == 3);
     CHECK(v->prCount == 0);
     CHECK(v->buildCount == 2);
+
+
+
+    prCount = 3;
+    pr[0] = "alpha";
+    pr[1] = "12";
+    pr[2] = "test";
+
+    expectedPointerSection[0] = (v->stack + 6 + 3);
+    expectedPointerSection[1] = (v->stack + 6);
+    expectedPointerSection[2] = (v->stack);
+
+    UTIL_semver_setPrBuild(v, pr, prCount, NULL, 0);
+
+    CHECK(memcmp(v->stack,
+                 "alpha\0"
+                 "12\0"
+                 "test\0",
+                 14) == 0);
+
+    CHECK(memcmp((v->stack + v->stackSize - (sizeof(char*) * 3)), expectedPointerSection, 3 * sizeof(expectedPointerSection[0])) == 0);
+    CHECK(v->major == 1);
+    CHECK(v->minor == 2);
+    CHECK(v->patch == 3);
+    CHECK(v->prCount == 3);
+    CHECK(v->buildCount == 0);
 }
 
 TEST_CASE("version.h UTIL_semvertos()")
