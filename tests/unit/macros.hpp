@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            18.06.2025
-copyright       MIT - Copyright (c) 2025 Oliver Blaser
+date            26.03.2026
+copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
 #ifndef IG_TEST_UNIT_MACROS_HPP
@@ -151,10 +151,18 @@ TEST_CASE("macros.h CLAMP MAX MIN")
     const value_type input[n] = { -5, 12, -2, 0, 1, 6, 3 };
     std::vector<value_type> result_clamp(n);
     std::vector<value_type> result_max(n);
+    std::vector<value_type> result_max3(n - 1);
+    std::vector<value_type> result_max4(n - 2);
     std::vector<value_type> result_min(n);
+    std::vector<value_type> result_min3(n - 1);
+    std::vector<value_type> result_min4(n - 2);
     const std::vector<value_type> expected_clamp{ 1, 5, 1, 1, 1, 5, 3 };
     const std::vector<value_type> expected_max{ 1, 12, 1, 1, 1, 6, 3 };
+    const std::vector<value_type> expected_max3{ 12, 12, 1, 1, 6, 6 };
+    const std::vector<value_type> expected_max4{ 12, 12, 1, 6, 6 };
     const std::vector<value_type> expected_min{ -5, 1, -2, 0, 1, 1, 1 };
+    const std::vector<value_type> expected_min3{ -5, -2, -2, 0, 1, 1 };
+    const std::vector<value_type> expected_min4{ -5, -2, -2, 0, 1 };
 
     REQUIRE(((SIZEOF_ARRAY(input) == n) &&                                                             //
              (result_clamp.size() == n) && (result_max.size() == n) && (result_min.size() == n) &&     //
@@ -164,13 +172,30 @@ TEST_CASE("macros.h CLAMP MAX MIN")
     for (size_t i = 0; i < n; ++i)
     {
         result_clamp[i] = UTIL_CLAMP(input[i], lo, hi);
+
         result_max[i] = UTIL_MAX(input[i], lo);
         result_min[i] = UTIL_MIN(input[i], lo);
+
+        if (i < (n - 1))
+        {
+            result_max3[i] = UTIL_MAX3(input[i], input[i + 1], lo);
+            result_min3[i] = UTIL_MIN3(input[i], input[i + 1], lo);
+        }
+
+        if (i < (n - 2))
+        {
+            result_max4[i] = UTIL_MAX4(input[i], input[i + 1], input[i + 2], lo);
+            result_min4[i] = UTIL_MIN4(input[i], input[i + 1], input[i + 2], lo);
+        }
     }
 
     CHECK(result_clamp == expected_clamp);
     CHECK(result_max == expected_max);
+    CHECK(result_max3 == expected_max3);
+    CHECK(result_max4 == expected_max4);
     CHECK(result_min == expected_min);
+    CHECK(result_min3 == expected_min3);
+    CHECK(result_min4 == expected_min4);
 }
 
 TEST_CASE("macros.h ROUND")
