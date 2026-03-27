@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            19.03.2026
+date            27.03.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -37,6 +37,25 @@ extern "C" {
 #define UTIL_MINUTE_us (UTIL_MINUTE_ms * 1000)
 #define UTIL_HOUR_us   (UTIL_HOUR_ms * 1000ll)
 #define UTIL_DAY_us    (UTIL_DAY_ms * 1000ll)
+
+#if !CONFIG_UTIL_TIME_NO_GLOBAL_LITERALS
+
+#define SECOND_s UTIL_SECOND_s
+#define MINUTE_s UTIL_MINUTE_s
+#define HOUR_s   UTIL_HOUR_s
+#define DAY_s    UTIL_DAY_s
+
+#define SECOND_ms UTIL_SECOND_ms
+#define MINUTE_ms UTIL_MINUTE_ms
+#define HOUR_ms   UTIL_HOUR_ms
+#define DAY_ms    UTIL_DAY_ms
+
+#define SECOND_us UTIL_SECOND_us
+#define MINUTE_us UTIL_MINUTE_us
+#define HOUR_us   UTIL_HOUR_us
+#define DAY_us    UTIL_DAY_us
+
+#endif // CONFIG_UTIL_TIME_NO_GLOBAL_LITERALS
 
 
 
