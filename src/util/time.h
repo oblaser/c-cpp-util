@@ -82,12 +82,12 @@ void UTIL_ns_to_timespec(struct timespec* dst, uint64_t t_ns);
 
 
 
-#if ___UTIL_PLAT_WIN && (___UTIL_STDC >= ___UTIL_STDC_11)
+#if ___UTIL_PLAT_WIN && ((___UTIL_STDC >= ___UTIL_STDC_11) || (___UTIL_STDCPP >= ___UTIL_STDCPP_17))
 void UTIL_filetime_to_timespec(struct timespec* tspec, const void* filetime_FILETIME);
 void UTIL_timespec_to_filetime(void* filetime_FILETIME, const struct timespec* tspec);
 #endif
 
-#if ___UTIL_PLAT_UNIX || (___UTIL_STDC >= ___UTIL_STDC_11)
+#if ___UTIL_PLAT_UNIX || (___UTIL_STDC >= ___UTIL_STDC_11) || (___UTIL_STDCPP >= ___UTIL_STDCPP_17)
 
 /**
  * @brief Get current system time.
