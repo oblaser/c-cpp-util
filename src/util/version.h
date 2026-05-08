@@ -113,7 +113,7 @@ void UTIL_semver_clear(UTIL_semver_t* v);
  * @param prCount Number of pre-release identifiers
  * @param build Build identifier list
  * @param buildCount Number of build identifiers
- * @return `0` on success, `-1` on error and `errno` is set accordingly
+ * @return `0` on success, `-1` on error
  */
 int UTIL_semver_setPrBuild(UTIL_semver_t* v, const char* const * pr, size_t prCount, const char* const * build, size_t buildCount);
 
@@ -128,7 +128,7 @@ int UTIL_semvercmp(const UTIL_semver_t* a, const UTIL_semver_t* b);
  * @param size Size of the destination buffer
  * @param v
  * @param [out] end <i>optional</i> Pointer to a pointer which will point, after successful operation, to the null terminator in the destination buffer
- * @return `dst` on success, `NULL` on error and `errno` is set accordingly
+ * @return `dst` on success, `NULL` on error
  */
 char* UTIL_semvertos(char* dst, size_t size, const UTIL_semver_t* v, char** end);
 
@@ -141,7 +141,7 @@ char* UTIL_semvertos(char* dst, size_t size, const UTIL_semver_t* v, char** end)
  *
  * @param [out] v
  * @param str Version string according to semver
- * @return `0` on success, `-1` on error and `errno` is set accordingly
+ * @return `0` on success, `-1` on error
  */
 int UTIL_stosemver(UTIL_semver_t* v, const char* str);
 

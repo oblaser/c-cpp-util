@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            22.03.2026
+date            09.05.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -291,9 +291,20 @@ TEST_CASE("version.h UTIL_semver_setPrBuild()")
 
 TEST_CASE("version.h UTIL_semvertos()")
 {
+    uint8_t ___stack[512];
     UTIL_semver_t ___v;
+    ___v.stack = ___stack;
+    ___v.stackSize = sizeof(___stack);
+
     UTIL_semver_t* v = &___v;
+
+    const char* const pr[] = { "alpha", "3", "m-q" };
+    const char* const build[] = { "ASDF", "1234-5678" };
+
     char buffer[1024];
+    char* end;
+
+
 
     v->major = 1;
     v->minor = 2;
@@ -302,4 +313,21 @@ TEST_CASE("version.h UTIL_semvertos()")
     v->buildCount = 0;
 
     CHECK(UTIL_semvertos(buffer, sizeof(buffer), v, NULL) == std::string("1.2.3"));
+
+
+
+    v->major = 5;
+    v->minor = 21;
+    v->patch = 7;
+
+    UTIL_semver_setPrBuild(v, pr, SIZEOF_ARRAY(pr), NULL, 0);
+    CHECK(UTIL_semvertos(buffer, sizeof(buffer), v, &end) == std::string("5.21.7-alpha.3.m-q"));
+    CHECK(end == (buffer + 18));
+
+    UTIL_semver_setPrBuild(v, NULL, 0, build, SIZEOF_ARRAY(build));
+    CHECK(UTIL_semvertos(buffer, sizeof(buffer), v, NULL) == std::string("5.21.7+ASDF.1234-5678"));
+
+    UTIL_semver_setPrBuild(v, pr, SIZEOF_ARRAY(pr), build, SIZEOF_ARRAY(build));
+    CHECK(UTIL_semvertos(buffer, sizeof(buffer), v, &end) == std::string("5.21.7-alpha.3.m-q+ASDF.1234-5678"));
+    CHECK(end == (buffer + 33));
 }

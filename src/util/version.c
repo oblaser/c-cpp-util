@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            22.03.2026
+date            09.05.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -185,7 +185,6 @@ char* UTIL_semvertos(char* dst, size_t size, const UTIL_semver_t* v, char** end)
 {
 #warning "TODO size checks, currently assuming sufficent destination buffer size"
     (void)size;
-    (void)end;
 
 #if CONFIG_UTIL_VERSION_USE_STDIO
     sprintf(dst, "%i.%i.%i", v->major, v->minor, v->patch);
@@ -217,6 +216,7 @@ char* UTIL_semvertos(char* dst, size_t size, const UTIL_semver_t* v, char** end)
             ++cnt;
             ++identifier;
         }
+        *p = 0;
     }
 
     for (size_t i = 0; i < v->buildCount; ++i)
@@ -235,7 +235,10 @@ char* UTIL_semvertos(char* dst, size_t size, const UTIL_semver_t* v, char** end)
             ++cnt;
             ++identifier;
         }
+        *p = 0;
     }
+
+    if (end) { *end = p; }
 
     return dst;
 }
