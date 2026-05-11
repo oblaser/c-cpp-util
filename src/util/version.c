@@ -89,7 +89,13 @@ int UTIL_semver_setPrBuild(UTIL_semver_t* v, const char* const * pr, size_t prCo
 
             if (p && *p) // valid pointer and not empty string
             {
-                reqSize += UTIL_strlen(p);
+                reqSize +=
+#if CONFIG_UTIL_VERSION_USE_STDIO
+                    strlen(p);
+#else
+                    UTIL_strlen(p);
+#endif
+
                 ++reqSize; // null terminator
                 reqSize += sizeof(uintptr_t);
             }
@@ -104,7 +110,13 @@ int UTIL_semver_setPrBuild(UTIL_semver_t* v, const char* const * pr, size_t prCo
 
             if (p && *p) // valid pointer and not empty string
             {
-                reqSize += UTIL_strlen(p);
+                reqSize +=
+#if CONFIG_UTIL_VERSION_USE_STDIO
+                    strlen(p);
+#else
+                    UTIL_strlen(p);
+#endif
+
                 ++reqSize; // null terminator
                 reqSize += sizeof(uintptr_t);
             }

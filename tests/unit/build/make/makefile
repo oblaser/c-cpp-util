@@ -13,7 +13,7 @@ CXX_LINK = g++
 
 SRC_DIR = ../../../../src
 
-DEFINE_FLAGS = -DCONFIG_UTIL_LOG_MAX_LEVEL=0 # -DCONFIG_UTIL_STRING_8BIT_ARCH=1
+DEFINE_FLAGS = -DCONFIG_UTIL_LOG_MAX_LEVEL=0 # -DCONFIG_UTIL_VERSION_USE_STDIO=1 -DCONFIG_UTIL_STRING_8BIT_ARCH=1
 INCLUDE_DIR_FLAGS = -I$(SRC_DIR)
 
 CFLAGS_COMMON = $(INCLUDE_DIR_FLAGS) $(DEFINE_FLAGS) --pedantic -Wall -Wextra -Werror=format -Werror=overflow -Werror=return-type -Werror=array-bounds -Werror=unused-parameter -Wdouble-promotion
