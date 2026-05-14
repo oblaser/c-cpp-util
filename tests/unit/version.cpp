@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            09.05.2026
+date            14.05.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -287,6 +287,52 @@ TEST_CASE("version.h UTIL_semver_setPrBuild()")
     CHECK(v->patch == 3);
     CHECK(v->prCount == 3);
     CHECK(v->buildCount == 0);
+
+
+
+#if DBG_LOG
+    memset(___stack, 0x5A, sizeof(___stack));
+    memset(pr, 0x5A, sizeof(pr));
+    memset(build, 0x5A, sizeof(build));
+    memset(expectedPointerSection, 0x5A, sizeof(expectedPointerSection));
+#endif // DBG_LOG
+
+    prCount = 1;
+    pr[0] = "qwertz.456";
+
+    buildCount = 1;
+    build[0] = "b.DEV.0123";
+
+    expectedPointerSection[0] = (v->stack + 7 + 4 + 2 + 4);
+    expectedPointerSection[1] = (v->stack + 7 + 4 + 2);
+    expectedPointerSection[2] = (v->stack + 7 + 4);
+    expectedPointerSection[3] = (v->stack + 7);
+    expectedPointerSection[4] = (v->stack);
+
+    UTIL_semver_setPrBuild(v, pr, prCount, build, buildCount);
+
+#if DBG_LOG && 0
+    printf("stack: %p\n", v->stack);
+    hexDump(v->stack, v->stackSize);
+    printf("\n");
+    hexDump((uint8_t*)expectedPointerSection, sizeof(expectedPointerSection));
+    printf("\n");
+#endif // DBG_LOG
+
+    CHECK(memcmp(v->stack,
+                 "qwertz\0"
+                 "456\0"
+                 "b\0"
+                 "DEV\0"
+                 "0123\0",
+                 22) == 0);
+
+    CHECK(memcmp((v->stack + v->stackSize - (sizeof(char*) * 5)), expectedPointerSection, 5 * sizeof(expectedPointerSection[0])) == 0);
+    CHECK(v->major == 1);
+    CHECK(v->minor == 2);
+    CHECK(v->patch == 3);
+    CHECK(v->prCount == 2);
+    CHECK(v->buildCount == 3);
 }
 
 TEST_CASE("version.h UTIL_semvertos()")

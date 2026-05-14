@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            09.05.2026
+date            14.05.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -22,6 +22,10 @@ copyright       MIT - Copyright (c) 2026 Oliver Blaser
 static const char identDelimiter = '.'; // identifier delimiter
 static const char prDelimiter = '-';
 static const char buildDelimiter = '+';
+
+
+
+static size_t getIdentifierSize(const char* p, size_t* nIdentifiers);
 
 
 
@@ -85,19 +89,13 @@ int UTIL_semver_setPrBuild(UTIL_semver_t* v, const char* const * pr, size_t prCo
     {
         for (size_t i = 0; i < prCount; ++i)
         {
-            const char* const p = *(pr + i);
+            const char* const p = *(pr + i); // src, identifier
 
             if (p && *p) // valid pointer and not empty string
             {
-                reqSize +=
-#if CONFIG_UTIL_VERSION_USE_STDIO
-                    strlen(p);
-#else
-                    UTIL_strlen(p);
-#endif
-
-                ++reqSize; // null terminator
-                reqSize += sizeof(uintptr_t);
+                size_t nIdentifiers;
+                reqSize += getIdentifierSize(p, &nIdentifiers);
+                reqSize += nIdentifiers * sizeof(uintptr_t);
             }
         }
     }
@@ -106,19 +104,13 @@ int UTIL_semver_setPrBuild(UTIL_semver_t* v, const char* const * pr, size_t prCo
     {
         for (size_t i = 0; i < buildCount; ++i)
         {
-            const char* const p = *(build + i);
+            const char* const p = *(build + i); // src, identifier
 
             if (p && *p) // valid pointer and not empty string
             {
-                reqSize +=
-#if CONFIG_UTIL_VERSION_USE_STDIO
-                    strlen(p);
-#else
-                    UTIL_strlen(p);
-#endif
-
-                ++reqSize; // null terminator
-                reqSize += sizeof(uintptr_t);
+                size_t nIdentifiers;
+                reqSize += getIdentifierSize(p, &nIdentifiers);
+                reqSize += nIdentifiers * sizeof(uintptr_t);
             }
         }
     }
@@ -136,7 +128,7 @@ int UTIL_semver_setPrBuild(UTIL_semver_t* v, const char* const * pr, size_t prCo
     v->prCount = 0;
     v->buildCount = 0;
 
-    char* p = (char*)(v->stack);
+    char* p = (char*)(v->stack); // dst, stack
     _Static_assert((sizeof(**pr) == 1) && (sizeof(**build) == 1), "sizeof(char) is expected to be 1");
     _Static_assert((sizeof(uintptr_t) == sizeof(p)) && (sizeof(uintptr_t) == sizeof(char*)), "sizeof(uintptr_t) is expected to be equal to sizeof(char*)");
 
@@ -152,14 +144,22 @@ int UTIL_semver_setPrBuild(UTIL_semver_t* v, const char* const * pr, size_t prCo
 
                 while (*prStr != 0)
                 {
-                    *p = *prStr;
-                    ++p;
-                    ++prStr;
+                    if (*prStr == identDelimiter)
+                    {
+                        *p = 0;
+                        ++p;
+                        ++(v->prCount);
+                    }
+                    else
+                    {
+                        *p = *prStr;
+                        ++p;
+                        ++prStr;
+                    }
                 }
 
                 *p = 0;
                 ++p;
-
                 ++(v->prCount);
             }
         }
@@ -177,14 +177,22 @@ int UTIL_semver_setPrBuild(UTIL_semver_t* v, const char* const * pr, size_t prCo
 
                 while (*buildStr != 0)
                 {
-                    *p = *buildStr;
-                    ++p;
-                    ++buildStr;
+                    if (*buildStr == identDelimiter)
+                    {
+                        *p = 0;
+                        ++p;
+                        ++(v->buildCount);
+                    }
+                    else
+                    {
+                        *p = *buildStr;
+                        ++p;
+                        ++buildStr;
+                    }
                 }
 
                 *p = 0;
                 ++p;
-
                 ++(v->buildCount);
             }
         }
@@ -253,4 +261,30 @@ char* UTIL_semvertos(char* dst, size_t size, const UTIL_semver_t* v, char** end)
     if (end) { *end = p; }
 
     return dst;
+}
+
+
+
+/**
+ * @param p Pointer to the identifier to be parsed
+ * @param [out] nIdentifiers Pointer to a variable receiving the number of identifiers in `p`
+ * @return Number of chars (inclusive null terminators) needed to store the identifier(s)
+ */
+size_t getIdentifierSize(const char* p, size_t* nIdentifiers)
+{
+    size_t reqSize = 0;
+
+    *nIdentifiers = 1;
+
+    while (*p != 0)
+    {
+        if (*p == identDelimiter) { ++(*nIdentifiers); }
+
+        ++p;
+        ++reqSize;
+    }
+
+    ++reqSize;
+
+    return reqSize;
 }

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            22.03.2026
+date            14.05.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -103,6 +103,7 @@ void UTIL_semver_clear(UTIL_semver_t* v);
  * @brief Sets pre-release and build identifiers.
  *
  * Empty strings and null pointers are skipped.
+ * Identifiers containing the delimiter `.` get split into multiple identifiers.
  *
  * On error, `*v` remains unchanged.
  *
