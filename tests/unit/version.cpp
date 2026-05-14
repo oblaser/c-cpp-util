@@ -66,9 +66,12 @@ TEST_CASE("version.h UTIL_mmvercmp()")
 {
 #ifdef __GNUC__
 #pragma GCC diagnostic push
-// #pragma GCC diagnostic ignored "-Wc++20-extensions"
+#if (__GNUC__ == 13)
+#pragma GCC diagnostic ignored "-Wc++20-extensions"
+#else // gcc version
 #pragma GCC diagnostic ignored "-Wpedantic"
-#endif
+#endif // gcc version
+#endif // __GNUC__
 
     const UTIL_mmver_t v00 = { .major = 0, .minor = 0 };
     const UTIL_mmver_t v01 = { .major = 0, .minor = 1 };
