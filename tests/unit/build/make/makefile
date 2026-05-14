@@ -1,6 +1,6 @@
 
 # author        Oliver Blaser
-# date          19.03.2026
+# date          14.05.2026
 # copyright     MIT - Copyright (c) 2026 Oliver Blaser
 
 
@@ -20,9 +20,9 @@ CFLAGS_COMMON = $(INCLUDE_DIR_FLAGS) $(DEFINE_FLAGS) --pedantic -Wall -Wextra -W
 CFLAGS_CC = $(CFLAGS_COMMON) -Werror=discarded-qualifiers -Werror=implicit -Werror=incompatible-pointer-types -Werror=int-conversion -Werror=pointer-sign
 CFLAGS_CXX = $(CFLAGS_COMMON) -Werror=reorder -Werror=switch #-Wno-psabi -Wuseless-cast -Wsuggest-override
 
-SRC_FILES_LIB = $(SRC_DIR)/util/ansi-esc.h $(SRC_DIR)/util/bool.h $(SRC_DIR)/util/log.h $(SRC_DIR)/util/macros.h $(SRC_DIR)/util/time.c $(SRC_DIR)/util/time.h $(SRC_DIR)/util/string.c $(SRC_DIR)/util/string.h $(SRC_DIR)/util/version.c $(SRC_DIR)/util/version.h # $(SRC_DIR)/util/bits/ansi-esc.h $(SRC_DIR)/util/log_ansi-esc_disabled.h $(SRC_DIR)/util/log_ansi-esc_enabled.h $(SRC_DIR)/util/log_ansi-esc_rtt.h $(SRC_DIR)/util/log_ansi-esc.h $(SRC_DIR)/util/log_zephyr.h
-OBJS_LIB = time.o string.o version.o
-OBJS_TEST = test-bool-c.o test-string.o test-time.o test-version.o
+SRC_FILES_LIB = $(SRC_DIR)/util/ansi-esc.h $(SRC_DIR)/util/bool.h $(SRC_DIR)/util/buffer.c $(SRC_DIR)/util/buffer.h $(SRC_DIR)/util/log.h $(SRC_DIR)/util/macros.h $(SRC_DIR)/util/time.c $(SRC_DIR)/util/time.h $(SRC_DIR)/util/string.c $(SRC_DIR)/util/string.h $(SRC_DIR)/util/version.c $(SRC_DIR)/util/version.h # $(SRC_DIR)/util/bits/ansi-esc.h $(SRC_DIR)/util/log_ansi-esc_disabled.h $(SRC_DIR)/util/log_ansi-esc_enabled.h $(SRC_DIR)/util/log_ansi-esc_rtt.h $(SRC_DIR)/util/log_ansi-esc.h $(SRC_DIR)/util/log_zephyr.h
+OBJS_LIB = buffer.o time.o string.o version.o
+OBJS_TEST = test-bool-c.o test-buffer.o test-string.o test-time.o test-version.o
 OBJS = main.o $(OBJS_TEST) $(OBJS_LIB)
 EXE = test_unit.bin
 
@@ -46,11 +46,17 @@ test-bool-c.o: ../../bool.c ../../bool.h $(SRC_DIR)/util/bool.h
 test-string.o: string.o ../../string.cpp $(SRC_DIR)/util/macros.h
 	$(CXX) -o test-string.o -c $(CFLAGS_CXX) ../../string.cpp
 
+test-buffer.o: buffer.o ../../buffer.cpp
+	$(CXX) -o test-buffer.o -c $(CFLAGS_CXX) ../../buffer.cpp
+
 test-time.o: time.o ../../time.cpp
 	$(CXX) -o test-time.o -c $(CFLAGS_CXX) ../../time.cpp
 
 test-version.o: version.o ../../version.cpp
 	$(CXX) -o test-version.o -c $(CFLAGS_CXX) ../../version.cpp
+
+buffer.o: $(SRC_DIR)/util/buffer.c $(SRC_DIR)/util/buffer.h
+	$(CC) -c $(CFLAGS_CC) $(SRC_DIR)/util/buffer.c
 
 time.o: $(SRC_DIR)/util/time.c $(SRC_DIR)/util/time.h
 	$(CC) -c $(CFLAGS_CC) $(SRC_DIR)/util/time.c

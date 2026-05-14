@@ -1,5 +1,10 @@
 
 /**
+ * @defgroup grp_bufferLib Buffers Library
+ * `#include "util/buffer.h"`
+ */
+
+/**
  * @defgroup grp_stringLib Strings Library
  * `#include "util/string.h"`
  */
