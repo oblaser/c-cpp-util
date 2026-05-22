@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            14.05.2026
+date            22.05.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -148,7 +148,10 @@ int UTIL_semver_setPrBuild(UTIL_semver_t* v, const char* const * pr, size_t prCo
                     {
                         *p = 0;
                         ++p;
+                        ++prStr;
                         ++(v->prCount);
+
+                        *((uintptr_t*)(v->stack + v->stackSize - ((v->prCount + 1) * sizeof(uintptr_t)))) = (uintptr_t)p;
                     }
                     else
                     {
@@ -181,7 +184,10 @@ int UTIL_semver_setPrBuild(UTIL_semver_t* v, const char* const * pr, size_t prCo
                     {
                         *p = 0;
                         ++p;
+                        ++buildStr;
                         ++(v->buildCount);
+
+                        *((uintptr_t*)(v->stack + v->stackSize - (v->prCount * sizeof(uintptr_t)) - ((v->buildCount + 1) * sizeof(uintptr_t)))) = (uintptr_t)p;
                     }
                     else
                     {

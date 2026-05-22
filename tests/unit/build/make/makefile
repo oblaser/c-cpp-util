@@ -65,5 +65,5 @@ clean:
 	rm $(FILES_TO_CLEAN)
 
 run: $(EXE)
-	@echo "\033[32m########################################\033[39m"
+	@echo "\033[90mbuilt successfully\033[39m"
 	./$(EXE)
