@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            26.03.2026
+date            27.07.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -105,6 +105,16 @@ copyright       MIT - Copyright (c) 2026 Oliver Blaser
 
 #define UTIL_ROUND(_type, _v)  ((_type)((_v) < 0 ? ((_v) - (0.5)) : ((_v) + (0.5))))
 #define UTIL_ROUNDF(_type, _v) ((_type)((_v) < 0 ? ((_v) - (0.5f)) : ((_v) + (0.5f))))
+
+/**
+ * Rounded unsigned integer division `a / b`.
+ */
+#define UTIL_DIV_UROUND(_a, _b) (((_a) + ((_b) / 2)) / (_b))
+
+/**
+ * Rounded signed integer division `a / b`.
+ */
+#define UTIL_DIV_ROUND(_a, _b) ((((_a) < 0) != ((_b) < 0)) ? (((_a) - ((_b) / 2)) / (_b)) : (((_a) + ((_b) / 2)) / (_b)))
 
 
 
