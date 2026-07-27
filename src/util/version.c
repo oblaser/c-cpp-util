@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            22.05.2026
+date            27.07.2026
 copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
@@ -8,6 +8,7 @@ copyright       MIT - Copyright (c) 2026 Oliver Blaser
 #include <stddef.h>
 #include <stdint.h>
 #if CONFIG_UTIL_VERSION_USE_STDIO
+#include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
 #endif
@@ -213,7 +214,7 @@ char* UTIL_semvertos(char* dst, size_t size, const UTIL_semver_t* v, char** end)
     (void)size;
 
 #if CONFIG_UTIL_VERSION_USE_STDIO
-    sprintf(dst, "%i.%i.%i", v->major, v->minor, v->patch);
+    sprintf(dst, "%" PRIi32 ".%" PRIi32 ".%" PRIi32, v->major, v->minor, v->patch);
     char* p = dst + strlen(dst);
 #else
     char* p = dst;

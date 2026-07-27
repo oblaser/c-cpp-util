@@ -35,31 +35,40 @@ BUILDDATE = $(shell date +"%Y-%m-%d-%H-%M")
 all: $(EXE)
 
 $(EXE): $(OBJS)
-	$(CXX) $(CFLAGS_CXX) -o $(EXE) $(OBJS)
+	@echo $@
+	@$(CXX) $(CFLAGS_CXX) -o $(EXE) $(OBJS)
 
 main.o: $(OBJS_LIB) $(OBJS_TEST) $(SRC_FILES_LIB) ../../main.cpp ../../bool.hpp $(SRC_DIR)/util/bool.h ../../log.hpp $(SRC_DIR)/util/log.h ../../macros.hpp $(SRC_DIR)/util/macros.h $(SRC_DIR)/util/time.h
-	$(CXX) -c $(CFLAGS_CXX) ../../main.cpp
+	@echo $@
+	@$(CXX) -c $(CFLAGS_CXX) ../../main.cpp
 
 test-bool-c.o: ../../bool.c ../../bool.h $(SRC_DIR)/util/bool.h
-	$(CC) -o test-bool-c.o -c $(CFLAGS_CC) ../../bool.c
+	@echo $@
+	@$(CC) -o test-bool-c.o -c $(CFLAGS_CC) ../../bool.c
 
 test-string.o: string.o ../../string.cpp $(SRC_DIR)/util/macros.h
-	$(CXX) -o test-string.o -c $(CFLAGS_CXX) ../../string.cpp
+	@echo $@
+	@$(CXX) -o test-string.o -c $(CFLAGS_CXX) ../../string.cpp
 
 test-time.o: time.o ../../time.cpp
-	$(CXX) -o test-time.o -c $(CFLAGS_CXX) ../../time.cpp
+	@echo $@
+	@$(CXX) -o test-time.o -c $(CFLAGS_CXX) ../../time.cpp
 
 test-version.o: version.o ../../version.cpp
-	$(CXX) -o test-version.o -c $(CFLAGS_CXX) ../../version.cpp
+	@echo $@
+	@$(CXX) -o test-version.o -c $(CFLAGS_CXX) ../../version.cpp
 
 time.o: $(SRC_DIR)/util/time.c $(SRC_DIR)/util/time.h
-	$(CC) -c $(CFLAGS_CC) $(SRC_DIR)/util/time.c
+	@echo $@
+	@$(CC) -c $(CFLAGS_CC) $(SRC_DIR)/util/time.c
 
 string.o: $(SRC_DIR)/util/string.c $(SRC_DIR)/util/string.h
-	$(CC) -c $(CFLAGS_CC) $(SRC_DIR)/util/string.c
+	@echo $@
+	@$(CC) -c $(CFLAGS_CC) $(SRC_DIR)/util/string.c
 
 version.o: string.o $(SRC_DIR)/util/version.c $(SRC_DIR)/util/version.h
-	$(CC) -c $(CFLAGS_CC) $(SRC_DIR)/util/version.c
+	@echo $@
+	@$(CC) -c $(CFLAGS_CC) $(SRC_DIR)/util/version.c
 
 clean:
 	rm $(FILES_TO_CLEAN)
