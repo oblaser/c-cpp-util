@@ -1,6 +1,6 @@
 
 # author        Oliver Blaser
-# date          19.03.2026
+# date          28.07.2026
 # copyright     MIT - Copyright (c) 2026 Oliver Blaser
 
 
@@ -71,7 +71,7 @@ version.o: string.o $(SRC_DIR)/util/version.c $(SRC_DIR)/util/version.h
 	@$(CC) -c $(CFLAGS_CC) $(SRC_DIR)/util/version.c
 
 clean:
-	rm $(FILES_TO_CLEAN)
+	rm -f $(FILES_TO_CLEAN)
 
 run: $(EXE)
 	@echo "\033[90mbuilt successfully\033[39m"
